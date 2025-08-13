@@ -26,7 +26,7 @@ export function BookingForm() {
     <section className=" ">
       <Container>
         <div className="max-w-6xl mx-auto">
-          <div className="text-center mb-12">
+          <div className="text-center md:mb-6 mb-1">
             <h2 className="text-xl sm:text-4xl font-bold text-gray-900 mb-4">
               Holiday Packages
             </h2>

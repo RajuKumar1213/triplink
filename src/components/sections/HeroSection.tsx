@@ -2,10 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
-import {
-  ChevronLeft,
-  ChevronRight,
-} from "lucide-react";
+import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 
 export function HeroSection() {
@@ -91,7 +88,7 @@ export function HeroSection() {
   };
 
   return (
-    <div className="mb-20">
+    <div className="md:mb-20 mb-10">
       {/* Destination Slider */}
       <Container size="xl" className="px-2!">
         <div className="relative">
@@ -115,7 +112,7 @@ export function HeroSection() {
               {destinations.map((destination, index) => (
                 <div
                   key={index}
-                  className="flex-shrink-0 text-center cursor-pointer group relative"
+                  className="flex-shrink-0 justify-center text-center cursor-pointer group relative"
                   style={{ width: `${100 / itemsPerView}%` }}>
                   <div className="w-16 h-16 rounded-full flex items-center justify-center text-3xl -mb-3 group-hover:scale-110 transition-transform duration-200 border-2 border-transparent mx-auto">
                     <Image
@@ -123,10 +120,10 @@ export function HeroSection() {
                       alt={destination.name}
                       width={40}
                       height={40}
-                      className="h-10 w-10"
+                      className="md:h-10 md:w-10 h-6 w-6"
                     />
                   </div>
-                  <p className="text-[12px] font-medium text-gray-700 group-hover:text-yellow-600">
+                  <p className="md:text-[12px] text-[10px] font-medium text-gray-700 group-hover:text-yellow-600 text-center relative left-2">
                     {destination.name}
                   </p>
                 </div>
@@ -143,8 +140,6 @@ export function HeroSection() {
             </button>
           )}
         </div>
-
-
       </Container>
 
       {/* Hero Banner */}

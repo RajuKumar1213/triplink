@@ -37,7 +37,6 @@ export default function Home() {
           </div>
         </div>
 
-        {/* FAQ Section */}
         <FAQSection />
       </main>
       <Footer />
