@@ -12,7 +12,8 @@ const internationalDestinations = [
     id: 1,
     destination: "LUXURY BALI",
     duration: "6N | 7D",
-    image: "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    image:
+      "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     price: 89990,
     originalPrice: 119990,
     rating: 4.8,
@@ -25,7 +26,8 @@ const internationalDestinations = [
     id: 2,
     destination: "MAGICAL TURKEY",
     duration: "7N | 8D",
-    image: "https://triplinkadventures.com/wp-content/uploads/2025/06/turkey-hot-air-ballooning-over-uchisar-village-cappadocia.jpg",
+    image:
+      "https://triplinkadventures.com/wp-content/uploads/2025/06/turkey-hot-air-ballooning-over-uchisar-village-cappadocia.jpg",
     price: 124990,
     originalPrice: 149990,
     rating: 4.9,
@@ -38,7 +40,8 @@ const internationalDestinations = [
     id: 3,
     destination: "EXOTIC THAILAND",
     duration: "5N | 6D",
-    image: "https://images.pexels.com/photos/844167/pexels-photo-844167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    image:
+      "https://images.pexels.com/photos/844167/pexels-photo-844167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     price: 69990,
     originalPrice: 89990,
     rating: 4.7,
@@ -51,7 +54,8 @@ const internationalDestinations = [
     id: 4,
     destination: "AMAZING JAPAN",
     duration: "8N | 9D",
-    image: "https://images.pexels.com/photos/2902939/pexels-photo-2902939.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    image:
+      "https://images.pexels.com/photos/2902939/pexels-photo-2902939.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     price: 189990,
     originalPrice: 229990,
     rating: 4.9,
@@ -64,7 +68,8 @@ const internationalDestinations = [
     id: 5,
     destination: "SCENIC ALMÁTY",
     duration: "6N | 7D",
-    image: "https://images.pexels.com/photos/734102/pexels-photo-734102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    image:
+      "https://images.pexels.com/photos/734102/pexels-photo-734102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     price: 149990,
     originalPrice: 179990,
     rating: 4.6,
@@ -77,7 +82,8 @@ const internationalDestinations = [
     id: 6,
     destination: "PARADISE MALDIVES",
     duration: "4N | 5D",
-    image: "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+    image:
+      "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
     price: 299990,
     originalPrice: 399990,
     rating: 4.9,
@@ -111,10 +117,10 @@ export function InternationalDestinations() {
   );
 
   return (
-  <section className=" py-10 ">
+    <section className="py-10 ">
       <Container size="xl">
         {/* Header */}
-  <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6 gap-4">
           <SectionHeader
             align="left"
             eyebrow="Explore the world"
@@ -139,7 +145,7 @@ export function InternationalDestinations() {
         </div>
 
         {/* Destinations Grid */}
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-6 mb-8">
           {visibleDestinations.map((destination) => (
             <TravelCard
               key={destination.id}
@@ -153,7 +159,9 @@ export function InternationalDestinations() {
               features={destination.features}
               discount={destination.discount}
               isPopular={destination.isPopular}
-              onBookNow={() => console.log(`Booking ${destination.destination}`)}
+              onBookNow={() =>
+                console.log(`Booking ${destination.destination}`)
+              }
             />
           ))}
         </div>

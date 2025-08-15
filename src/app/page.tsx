@@ -10,7 +10,7 @@ import Image from "next/image";
 
 export default function Home() {
   return (
-    <div className="min-h-screen bg-white">
+    <div className=" bg-white">
       <Header />
       <main>
         <HeroSection />
@@ -39,6 +39,7 @@ export default function Home() {
 
         <FAQSection />
       </main>
+
       <Footer />
     </div>
   );

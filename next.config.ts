@@ -17,6 +17,9 @@ const nextConfig: NextConfig = {
       "img.freepik.com",
       "www.thomascook.in",
       "w7.pngwing.com",
+      "images.unsplash.com",
+      "images.mid-day.com",
+      "yt3.googleusercontent.com",
     ],
   },
 };

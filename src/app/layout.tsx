@@ -1,6 +1,5 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
-import "./globals.css";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -14,7 +13,8 @@ const geistMono = Geist_Mono({
 
 export const metadata: Metadata = {
   title: "TripLink Adventures - Adventures That Inspire",
-  description: "Discover extraordinary journeys with TripLink Adventures. From international destinations to domestic escapes, we craft personalized travel experiences that resonate with your wanderlust.",
+  description:
+    "Discover extraordinary journeys with TripLink Adventures. From international destinations to domestic escapes, we craft personalized travel experiences that resonate with your wanderlust.",
 };
 
 export default function RootLayout({
@@ -25,8 +25,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={`${geistSans.variable} ${geistMono.variable} antialiased`}
-      >
+        className={`${geistSans.variable} ${geistMono.variable} antialiased`}>
         {children}
       </body>
     </html>

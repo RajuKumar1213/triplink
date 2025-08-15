@@ -1,0 +1,235 @@
+"use client";
+import { useState } from "react";
+import { BookingModal } from "./BookingModal";
+
+interface Props {
+  destination: string;
+  mode?: "full" | "single";
+  singleLabel?: string;
+  className?: string;
+  buttonClassName?: string;
+}
+
+export function BookingActions({
+  destination,
+  mode = "full",
+  singleLabel = "Book Now",
+  className = "",
+  buttonClassName = "",
+}: Props) {
+  const [open, setOpen] = useState(false);
+  const [shareOpen, setShareOpen] = useState(false);
+  const [copied, setCopied] = useState(false);
+
+  function handleShareClick() {
+    // If Web Share API is supported, use native share for better UX (especially mobile)
+    if (typeof navigator !== "undefined" && navigator.share) {
+      try {
+        navigator.share({
+          title: `${destination} Trip | TripLink`,
+          text: `Check out this amazing ${destination} trip itinerary on TripLink!`,
+          url: typeof window !== "undefined" ? window.location.href : undefined,
+        });
+        return;
+      } catch (error) {
+        // If user cancels or it fails, fall back to custom popover
+        console.error("Share failed:", error);
+      }
+    }
+    setShareOpen((v) => !v);
+  }
+
+  function handleCopyLink() {
+    if (typeof window === "undefined") return;
+    const url = window.location.href;
+    navigator.clipboard?.writeText(url).then(() => {
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    });
+  }
+
+  function buildShareUrl(base: string, params: Record<string, string>) {
+    const usp = new URLSearchParams(params);
+    return `${base}${base.includes("?") ? "&" : "?"}${usp.toString()}`;
+  }
+
+  const pageUrl = typeof window !== "undefined" ? window.location.href : "";
+  const encodedTitle = encodeURIComponent(`${destination} Trip | TripLink`);
+  const encodedUrl = encodeURIComponent(pageUrl);
+  const whatsappUrl = `https://wa.me/?text=${encodedTitle}%20-%20${encodedUrl}`;
+  const twitterUrl = `https://twitter.com/intent/tweet?text=${encodedTitle}&url=${encodedUrl}`;
+  const facebookUrl = buildShareUrl(
+    "https://www.facebook.com/sharer/sharer.php",
+    { u: pageUrl }
+  );
+  const mailtoUrl = `mailto:?subject=${encodedTitle}&body=${encodedTitle}%0A${encodedUrl}`;
+
+  if (mode === "single") {
+    return (
+      <>
+        <button
+          onClick={() => setOpen(true)}
+          className={
+            buttonClassName ||
+            "px-6 py-3 rounded-xl bg-black/70 hover:bg-black/80 text-yellow-200 font-semibold text-sm md:text-base shadow-lg shadow-black/30 transition"
+          }>
+          {singleLabel}
+        </button>
+        <BookingModal
+          open={open}
+          onClose={() => setOpen(false)}
+          destination={destination}
+        />
+      </>
+    );
+  }
+
+  return (
+    <div className={className + " flex flex-wrap gap-4 relative"}>
+      <button
+        onClick={() => setOpen(true)}
+        className="px-5 cursor-pointer md:px-7 py-3 rounded-xl bg-yellow-500 hover:bg-yellow-600 text-white font-semibold text-sm md:text-base shadow-lg shadow-yellow-500/30 transition">
+        Enquire / Book
+      </button>
+      <button className="px-5 cursor-pointer md:px-7 py-3 rounded-xl bg-gray-900/90 hover:bg-black text-yellow-100 font-semibold text-sm md:text-base transition">
+        Download PDF
+      </button>
+      <button
+        onClick={handleShareClick}
+        className="px-5 cursor-pointer md:px-7 py-3 rounded-xl bg-white/70 backdrop-blur hover:bg-white text-gray-800 font-semibold text-sm md:text-base border border-yellow-200/70 transition flex items-center gap-2">
+        <svg
+          width="18"
+          height="18"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2"
+          strokeLinecap="round"
+          strokeLinejoin="round">
+          <circle cx="18" cy="5" r="3" />
+          <circle cx="6" cy="12" r="3" />
+          <circle cx="18" cy="19" r="3" />
+          <path d="M8.59 13.51l6.83 3.98" />
+          <path d="M15.41 6.51l-6.82 3.98" />
+        </svg>
+        Share Trip
+      </button>
+      {shareOpen && (
+        <div className="absolute z-40 top-full mt-2 right-0 w-72 rounded-2xl border border-yellow-200/60 bg-white/90 backdrop-blur-xl shadow-2xl shadow-yellow-500/10 p-4 animate-[fadeIn_.2s_ease]">
+          <div className="flex items-center justify-between mb-2">
+            <h4 className="text-sm font-semibold text-gray-700">
+              Share this trip
+            </h4>
+            <button
+              onClick={() => setShareOpen(false)}
+              className="p-1 rounded-md hover:bg-gray-200/60">
+              <svg
+                width="16"
+                height="16"
+                viewBox="0 0 24 24"
+                stroke="currentColor"
+                strokeWidth="2"
+                fill="none"
+                strokeLinecap="round"
+                strokeLinejoin="round">
+                <path d="M18 6L6 18" />
+                <path d="M6 6l12 12" />
+              </svg>
+            </button>
+          </div>
+          <div className="grid grid-cols-3 gap-3 text-xs font-semibold">
+            <a
+              href={whatsappUrl}
+              target="_blank"
+              rel="noopener"
+              className="group flex flex-col items-center gap-1 p-2 rounded-xl bg-green-50 hover:bg-green-100 border border-green-100 transition text-gray-800">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-green-600">
+                <path d="M20.52 3.48A11.86 11.86 0 0012 .1C5.73.1.63 5.2.63 11.5c0 2 .53 3.95 1.54 5.67L.1 23.9l6.95-2.05a11.86 11.86 0 005.66 1.45h.01c6.3 0 11.4-5.1 11.4-11.4 0-3.04-1.18-5.9-3.4-8.12zM12 21.3a9.8 9.8 0 01-5-1.38l-.36-.21-4.12 1.22 1.22-4.02-.23-.41A9.78 9.78 0 012.2 11.5C2.2 6.04 6.54 1.7 12 1.7c2.6 0 5.04 1.02 6.88 2.86a9.69 9.69 0 012.85 6.84c0 5.46-4.44 9.9-9.73 9.9zm5.37-7.33c-.29-.15-1.7-.84-1.96-.94-.26-.1-.45-.15-.63.15-.19.29-.73.94-.9 1.13-.16.2-.34.22-.63.07-.29-.15-1.23-.45-2.34-1.44-.86-.77-1.44-1.72-1.6-2-.17-.29-.02-.45.13-.6.13-.13.29-.34.43-.5.15-.17.19-.29.29-.48.1-.2.05-.37-.02-.52-.07-.15-.63-1.51-.86-2.07-.23-.55-.46-.48-.63-.48-.16 0-.34-.02-.52-.02-.18 0-.48.07-.73.37-.26.29-1 1-1 2.44 0 1.44 1.03 2.84 1.18 3.04.15.2 2.03 3.1 4.92 4.35.69.3 1.23.48 1.65.61.69.22 1.32.19 1.82.12.56-.08 1.7-.69 1.94-1.35.24-.66.24-1.22.17-1.34-.06-.11-.26-.18-.55-.33z" />
+              </svg>
+              WhatsApp
+            </a>
+            <a
+              href={twitterUrl}
+              target="_blank"
+              rel="noopener"
+              className="group flex flex-col items-center gap-1 p-2 rounded-xl bg-sky-50 hover:bg-sky-100 border border-sky-100 transition text-gray-800">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-sky-500">
+                <path d="M22.46 6c-.77.35-1.6.57-2.46.67a4.3 4.3 0 001.88-2.38 8.59 8.59 0 01-2.72 1.05 4.28 4.28 0 00-7.3 3.9A12.15 12.15 0 013 4.8a4.28 4.28 0 001.32 5.7 4.24 4.24 0 01-1.94-.54v.05a4.28 4.28 0 003.44 4.2 4.3 4.3 0 01-1.93.07 4.28 4.28 0 004 2.97A8.6 8.6 0 012 19.54 12.14 12.14 0 008.29 21c7.55 0 11.68-6.26 11.68-11.68 0-.18-.01-.35-.02-.53A8.36 8.36 0 0022.46 6z" />
+              </svg>
+              Twitter
+            </a>
+            <a
+              href={facebookUrl}
+              target="_blank"
+              rel="noopener"
+              className="group flex flex-col items-center gap-1 p-2 rounded-xl bg-blue-50 hover:bg-blue-100 border border-blue-100 transition text-gray-800">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="currentColor"
+                className="text-blue-600">
+                <path d="M22.68 0H1.32A1.32 1.32 0 000 1.32v21.36A1.32 1.32 0 001.32 24h11.5v-9.3H9.76v-3.62h3.06V8.41c0-3.04 1.86-4.7 4.57-4.7 1.3 0 2.42.1 2.74.14v3.18h-1.88c-1.48 0-1.77.7-1.77 1.74v2.28h3.54l-.46 3.62h-3.08V24h6.04A1.32 1.32 0 0024 22.68V1.32A1.32 1.32 0 0022.68 0z" />
+              </svg>
+              Facebook
+            </a>
+            <button
+              onClick={handleCopyLink}
+              className="group flex flex-col items-center gap-1 p-2 rounded-xl bg-amber-50 hover:bg-amber-100 border border-amber-100 transition text-gray-800">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-amber-600">
+                <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                <path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1" />
+              </svg>
+              {copied ? "Copied!" : "Copy"}
+            </button>
+            <a
+              href={mailtoUrl}
+              className="group flex flex-col items-center gap-1 p-2 rounded-xl bg-rose-50 hover:bg-rose-100 border border-rose-100 transition col-span-2 text-gray-800">
+              <svg
+                width="22"
+                height="22"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                className="text-rose-600">
+                <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z" />
+                <path d="M22 6l-10 7L2 6" />
+              </svg>
+              Email
+            </a>
+          </div>
+          <p className="mt-3 text-[10px] text-gray-500 text-center">
+            Tip: Native share opens automatically on supported devices.
+          </p>
+        </div>
+      )}
+      <BookingModal
+        open={open}
+        onClose={() => setOpen(false)}
+        destination={destination}
+      />
+    </div>
+  );
+}

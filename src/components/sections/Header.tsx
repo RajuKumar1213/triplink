@@ -6,23 +6,26 @@ import { Button } from "@/components/ui/Button";
 import { Menu, X } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
+import { DestinationBar } from "./DestinationBar";
 
 export function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
+  // Build destination pills from centralized data; fallback for icon
   const navItems = [
-    { label: "Celebrity", href: "/international-trips" },
-    { label: "Corporate", href: "/domestic-trips" },
-    { label: "Trip Tours", href: "/celebrity" },
-    { label: "About", href: "/corporate" },
+    { label: "Celebrity", href: "/celebrity" },
+    { label: "Corporate", href: "/corporate" },
+    { label: "Trip Tours", href: "/trip-tours" },
+    { label: "About", href: "/about" },
   ];
 
   return (
+    <>
     <header className="bg-white/80 backdrop-blur-md border-b border-gray-200 sticky top-0 z-50">
       {/* Main navigation */}
 
       <Container size="xl">
-  <div className="flex items-center justify-between h-16">
+        <div className="flex items-center justify-between h-16">
           <div className="flex items-center">
             <div className="flex-shrink-0 flex items-center space-x-3">
               <Link href={"/"}>
@@ -39,23 +42,29 @@ export function Header() {
 
           {/* Desktop navigation */}
 
-          <div className="hidden md:flex items-center space-x-4">
+          <div className="hidden md:flex items-center space-x-6">
             <nav className="hidden md:block">
-              <div className="ml-10 flex items-baseline space-x-4">
-        {navItems.map((item) => (
-                  <a
+              <div className="ml-6 flex items-baseline space-x-4">
+                {navItems.map((item) => (
+                  <Link
                     key={item.label}
                     href={item.href}
-          className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm transition-colors">
+                    className="text-gray-700 hover:text-gray-900 px-3 py-2 rounded-md text-sm transition-colors font-semibold">
                     {item.label}
-                  </a>
+                  </Link>
                 ))}
               </div>
             </nav>
-      <Button variant="outline" size="sm">
+            <Button
+              variant="outline"
+              size="sm"
+              className="hidden lg:inline-flex">
               Request Invite
             </Button>
-      <Button variant="primary" size="sm">
+            <Button
+              variant="primary"
+              size="sm"
+              className="hidden lg:inline-flex">
               Payment
             </Button>
           </div>
@@ -79,17 +88,17 @@ export function Header() {
           <div className="md:hidden">
             <div className="px-2 pt-2 pb-3 space-y-1 sm:px-3 bg-gray-50 rounded-lg mt-2">
               {navItems.map((item) => (
-                <a
+                <Link
                   key={item.label}
                   href={item.href}
-                  className="text-gray-700 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-medium">
+                  className="text-gray-700 hover:text-yellow-500 block px-3 py-2 rounded-md text-base font-semibold">
                   {item.label}
-                </a>
+                </Link>
               ))}
               <Button variant="primary" size="sm" className="w-full mt-4">
                 Request Invite
               </Button>
-              <Button variant="primary" size="sm" className="w-full mt-4">
+              <Button variant="primary" size="sm" className="w-full mt-2">
                 Payment
               </Button>
             </div>
@@ -97,5 +106,7 @@ export function Header() {
         )}
       </Container>
     </header>
+      <DestinationBar />
+    </>
   );
 }

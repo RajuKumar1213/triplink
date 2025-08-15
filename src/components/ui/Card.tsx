@@ -11,8 +11,8 @@ export function Card({ children, className, hover = false }: CardProps) {
   return (
     <div
       className={cn(
-  // Reduce minimum width on very small screens so two cards can sit side by side
-  "bg-white/30 min-w-[160px] sm:min-w-[280px] rounded-3xl shadow-xl border border-gray-100 overflow-hidden",
+        // Reduce minimum width on very small screens so two cards can sit side by side
+        "bg-white/30 min-w-[160px] sm:min-w-[280px] rounded-3xl shadow-xl border border-gray-100 overflow-hidden",
         hover &&
           "transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]",
         className
@@ -106,7 +106,9 @@ export function TravelCard({
           <h3 className="text-base sm:text-xl font-bold text-white mb-0">
             {destination}
           </h3>
-          <p className="text-yellow-500 font-semibold text-xs sm:text-sm">{duration}</p>
+          <p className="text-yellow-500 font-semibold text-xs sm:text-sm">
+            {duration}
+          </p>
         </div>
 
         {/* Rating Badge */}
@@ -159,8 +161,6 @@ export function TravelCard({
           className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-600 hover:to-yellow-800 text-white font-bold py-2.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg group-hover:shadow-xl">
           BOOK NOW
         </button>
-
-        
       </CardContent>
     </Card>
   );

@@ -23,7 +23,7 @@ export function BookingForm() {
   };
 
   return (
-    <section className=" ">
+    <section className="my-5 ">
       <Container>
         <div className="max-w-6xl mx-auto">
           <div className="text-center md:mb-6 mb-1">
