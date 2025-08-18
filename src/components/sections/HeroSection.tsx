@@ -14,16 +14,20 @@ export function HeroSection() {
     {
       image:
         "https://www.thomascook.in/images/campaign-pages/2025/april/genric-holiday-1920x545.jpg",
+      bgColor: "#122126",
     },
 
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/3.svg",
+      bgColor: "#0774b7",
     },
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/5.svg",
+      bgColor: "#135b98",
     },
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/4.svg",
+      bgColor: "#84bdc7",
     },
   ];
 
@@ -39,7 +43,9 @@ export function HeroSection() {
 
   return (
     <section className="relative w-full my-4">
-      <div className="bg-[#122126] h-[120px] sm:h-[380px] md:h-[400px] lg:h-[360px] overflow-hidden">
+      <div
+        className={`h-[120px] sm:h-[380px] md:h-[400px] lg:h-[358px] overflow-hidden transition-colors duration-700`}
+        style={{ backgroundColor: heroSlides[currentSlide].bgColor }}>
         {/* Current Slide Image */}
         <Image
           key={heroSlides[currentSlide].image}

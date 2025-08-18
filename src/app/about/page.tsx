@@ -145,8 +145,7 @@ export default function AboutPage() {
             priority
             className="object-cover"
           />
-          <div className="absolute inset-0 bg-gradient-to-br from-black via-black/70 to-black/40" />
-          <div className="absolute -top-32 -left-24 w-[40rem] h-[40rem] bg-yellow-500/10 rounded-full blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-black/80 via-black40 to-black/30" />
           <div className="absolute top-1/3 -right-20 w-[32rem] h-[32rem] bg-yellow-300/10 rounded-full blur-3xl" />
         </div>
         <Container className="relative z-10 py-32 md:py-48 text-center flex flex-col items-center">
@@ -244,14 +243,15 @@ export default function AboutPage() {
               </StylishHeading>
               <RichText>
                 <p>
-                  Travel isn&apos;t just about places — it&apos;s about purpose. We&apos;re
-                  building a platform that connects wanderers with meaningful
-                  adventures, eco-conscious stays and a community of like-minded
-                  travelers.
+                  Travel isn&apos;t just about places — it&apos;s about purpose.
+                  We&apos;re building a platform that connects wanderers with
+                  meaningful adventures, eco-conscious stays and a community of
+                  like-minded travelers.
                 </p>
                 <p>
-                  We don&apos;t just link trips. We link people. We link stories. We
-                  link experiences. And we&apos;re just getting started.
+                  We don&apos;t just link trips. We link people. We link
+                  stories. We link experiences. And we&apos;re just getting
+                  started.
                 </p>
               </RichText>
               <Timeline />
