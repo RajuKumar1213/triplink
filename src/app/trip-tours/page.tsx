@@ -5,79 +5,79 @@ import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { TravelCard } from "@/components/ui/Card";
-import { backgroundImage } from "@/constant";
 
-// Corporate visuals and program offerings
-const carouselImages = [
-  "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/3183161/pexels-photo-3183161.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-  "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+// Carousel images (trip visuals)
+const tourCarouselImages = [
+  "https://cdn.pixabay.com/photo/2024/07/20/15/52/mountains-8908538_640.jpg",
+  "https://cdn.pixabay.com/photo/2017/05/10/13/39/ladakh-2300904_640.jpg",
+  "https://cdn.pixabay.com/photo/2019/08/14/09/34/zal-zal-lake-azad-kashmir-4405230_1280.jpg",
+  "https://static.toiimg.com/photo/80398554.cms",
 ];
 
-const corporatePrograms = [
+// Card data
+const tripTours = [
   {
-    destination: "Leadership Retreat - Himachal",
-    duration: "3N | 4D",
-    image: carouselImages[1],
-    price: 69999,
-    originalPrice: 89999,
-    rating: 4.9,
-    reviews: 48,
-    features: [
-      "Facilitated Workshops",
-      "Outdoor Challenges",
-      "Strategy Sessions",
-    ],
-  },
-  {
-    destination: "Team Offsite - Goa",
-    duration: "2N | 3D",
-    image: carouselImages[3],
-    price: 49999,
-    originalPrice: 64999,
-    rating: 4.8,
-    reviews: 76,
-    features: ["Beach Activities", "Team Building", "Evening Gala"],
-  },
-  {
-    destination: "Corporate Wellness - Kerala",
+    destination: "Manali Adventure",
     duration: "4N | 5D",
-    image: carouselImages[0],
-    price: 79999,
-    originalPrice: 94999,
+    image:
+      "https://cdn.pixabay.com/photo/2019/08/14/09/34/zal-zal-lake-azad-kashmir-4405230_1280.jpg",
+    price: 14999,
+    originalPrice: 19999,
     rating: 4.7,
-    reviews: 31,
-    features: ["Wellness Sessions", "Meditation", "Ayurvedic Therapies"],
+    reviews: 203,
+    features: ["River Rafting", "Solang Valley", "Local Culture"],
   },
   {
-    destination: "Incentive Trip - Maldives",
-    duration: "4N | 5D",
-    image: carouselImages[2],
-    price: 199999,
-    originalPrice: 249999,
-    rating: 5.0,
-    reviews: 12,
-    features: ["Luxury Resort", "Seaplane Transfer", "Private Dinners"],
+    destination: "Leh–Ladakh Expedition",
+    duration: "6N | 7D",
+    image:
+      "https://cdn.pixabay.com/photo/2017/05/10/13/39/ladakh-2300904_640.jpg",
+    price: 27999,
+    originalPrice: 33999,
+    rating: 4.9,
+    reviews: 156,
+    features: ["Nubra Valley", "Magnetic Hill", "Pangong Lake"],
+  },
+  {
+    destination: "Kashmir Paradise",
+    duration: "5N | 6D",
+    image:
+      "https://cdn.pixabay.com/photo/2024/07/20/15/52/mountains-8908538_640.jpg",
+    price: 18999,
+    originalPrice: 23999,
+    rating: 4.8,
+    reviews: 98,
+    features: ["Shikara Ride", "Gulmarg", "Snow Treks"],
+  },
+  {
+    destination: "Shimla – Kufri Getaway",
+    duration: "3N | 4D",
+    image: "https://static.toiimg.com/photo/80398554.cms",
+    price: 9999,
+    originalPrice: 13999,
+    rating: 4.6,
+    reviews: 121,
+    features: ["Mall Road", "Snow Point", "Local Food"],
   },
 ];
 
-export default function CorporatePage() {
+export default function TripToursPage() {
   return (
     <>
       <Header />
+      {/* Carousel (tours) */}
       <Container>
         <section className="relative">
           <div className="relative w-full">
             <div className="relative py-6 md:py-4">
               <div className="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 md:gap-6 [&::-webkit-scrollbar]:hidden">
-                {carouselImages.map((src, i) => (
+                {tourCarouselImages.map((src, i) => (
                   <div
                     key={src + i}
-                    className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 overflow-hidden  shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50">
+                    className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 overflow-hidden bg-gray-100 shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50">
                     <Image
                       src={src}
-                      alt={`Corporate visual ${i + 1}`}
+                      alt={`Tour image ${i + 1}`}
                       fill
                       priority={i === 0}
                       className="object-cover"
@@ -90,13 +90,14 @@ export default function CorporatePage() {
               <div className="absolute left-0 top-0 h-full w-4 bg-gradient-to-r from-white to-transparent pointer-events-none" />
               <div className="absolute right-0 top-0 h-full w-4 bg-gradient-to-l from-white to-transparent pointer-events-none" />
             </div>
+            {/* Info strip minimal */}
             <Container className="mt-4 bg-white/80 backdrop-blur-md border border-yellow-200/60 rounded-2xl p-6 md:p-8 shadow-lg shadow-yellow-100/50">
               <div className="flex flex-col gap-4">
                 <p className="uppercase tracking-[0.35em] text-[10px] md:text-xs font-semibold text-yellow-600">
-                  Corporate Programs
+                  Curated Tours
                 </p>
                 <h1 className="text-3xl md:text-4xl font-black leading-tight text-gray-900 tracking-tight">
-                  Corporate Travel & Retreats
+                  Explore Popular Trips
                 </h1>
               </div>
             </Container>
@@ -104,11 +105,12 @@ export default function CorporatePage() {
         </section>
       </Container>
 
-      <div className="relative mt-8">
+      {/* Card grid */}
+      <div className="relative mt-10">
         <div className="absolute inset-0 opacity-10">
           <Image
-            src={backgroundImage}
-            alt="Backgroundttp"
+            src="https://i.pinimg.com/originals/9a/f0/d4/9af0d4299c57963724ea1a6b45b8ec0c.jpg"
+            alt="Background"
             fill
             className="object-cover object-center"
             priority={false}
@@ -116,7 +118,7 @@ export default function CorporatePage() {
         </div>
         <Container className="py-12">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {corporatePrograms.map((t) => (
+            {tripTours.map((t) => (
               <TravelCard
                 key={t.destination}
                 destination={t.destination}
@@ -128,7 +130,7 @@ export default function CorporatePage() {
                 reviews={t.reviews}
                 features={t.features}
                 onBookNow={() =>
-                  console.log("Book corporate program: " + t.destination)
+                  console.log("Book trip tour: " + t.destination)
                 }
               />
             ))}

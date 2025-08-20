@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
+import { backgroundImage } from "@/constant";
 
 // Data structures
 const team = [
@@ -175,235 +176,248 @@ export default function AboutPage() {
         </Container>
       </section>
 
-      {/* WHO WE ARE */}
-      <RevealSection
-        className="py-10 bg-gradient-to-b from-white to-yellow-50/30"
-        delay={0.05}>
-        <Container className="max-w-4xl">
-          <StylishHeading icon="✈️">Who We Are</StylishHeading>
-          <RichText>
-            <p>
-              Ever found yourself scrolling through travel reels at midnight,
-              whispering to yourself, “I need a break”? We’ve been there too.
-              And that’s exactly why Triplink Adventures was born.
-            </p>
-            <p>
-              We’re not just another travel brand selling packages. We’re here
-              for the dreamers, the planners, and the spontaneous ones — the
-              ones who want more than just a place to stay. We’re here for the
-              experiences that stay with you long after your bags are unpacked.
-            </p>
-            <p>
-              So let’s go beyond the checklist. Skip the tourist traps. Discover
-              the real, the raw, the unforgettable. Let’s make memories worth
-              linking.
-            </p>
-          </RichText>
-        </Container>
-      </RevealSection>
+      <div className="relative">
+        <div className="absolute inset-0 opacity-10">
+          <Image
+            src={backgroundImage}
+            alt="Backgroundttp"
+            fill
+            className="object-cover object-center"
+            priority={false}
+          />
+        </div>
 
-      {/* WHY WE EXIST + VALUES GRID */}
-      <RevealSection className="py-10" delay={0.1}>
-        <Container className="max-w-6xl">
-          <div className="grid lg:grid-cols-5 gap-14 items-start">
-            <div className="lg:col-span-2 space-y-8">
-              <div className="relative h-80 rounded-3xl overflow-hidden shadow-xl ring-1 ring-yellow-200/60 group">
-                <Image
-                  src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
-                  alt="Purpose driven"
-                  fill
-                  className="object-cover group-hover:scale-105 transition-transform duration-[2500ms]"
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-                <div className="absolute bottom-4 left-4 text-white font-semibold text-sm tracking-wider uppercase flex items-center gap-2">
-                  <span className="inline-block w-2 h-2 rounded-full bg-yellow-400" />{" "}
-                  PURPOSE DRIVEN
-                </div>
-              </div>
-              <div className="grid sm:grid-cols-2 gap-4">
-                {values.map((v) => (
-                  <div
-                    key={v.title}
-                    className="relative p-5 rounded-2xl bg-white/70 backdrop-blur border border-yellow-100 shadow-sm hover:shadow-xl transition group overflow-hidden">
-                    <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-yellow-100/30 to-yellow-50/10 transition" />
-                    <h4 className="font-bold text-gray-900 mb-1 tracking-tight flex items-center gap-2">
-                      <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
-                      {v.title}
-                    </h4>
-                    <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                      {v.text}
-                    </p>
-                  </div>
-                ))}
-              </div>
-            </div>
-            <div className="lg:col-span-3 space-y-8">
-              <StylishHeading icon="🌍">
-                Why We Exist & Where We’re Headed
-              </StylishHeading>
-              <RichText>
-                <p>
-                  Travel isn&apos;t just about places — it&apos;s about purpose.
-                  We&apos;re building a platform that connects wanderers with
-                  meaningful adventures, eco-conscious stays and a community of
-                  like-minded travelers.
-                </p>
-                <p>
-                  We don&apos;t just link trips. We link people. We link
-                  stories. We link experiences. And we&apos;re just getting
-                  started.
-                </p>
-              </RichText>
-              <Timeline />
-            </div>
-          </div>
-        </Container>
-      </RevealSection>
+        {/* WHO WE ARE */}
+        <RevealSection
+          className="py-10 "
+          delay={0.05}>
+          <Container className="max-w-4xl">
+            <StylishHeading icon="✈️">Who We Are</StylishHeading>
+            <RichText>
+              <p>
+                Ever found yourself scrolling through travel reels at midnight,
+                whispering to yourself, “I need a break”? We’ve been there too.
+                And that’s exactly why Triplink Adventures was born.
+              </p>
+              <p>
+                We’re not just another travel brand selling packages. We’re here
+                for the dreamers, the planners, and the spontaneous ones — the
+                ones who want more than just a place to stay. We’re here for the
+                experiences that stay with you long after your bags are
+                unpacked.
+              </p>
+              <p>
+                So let’s go beyond the checklist. Skip the tourist traps.
+                Discover the real, the raw, the unforgettable. Let’s make
+                memories worth linking.
+              </p>
+            </RichText>
+          </Container>
+        </RevealSection>
 
-      {/* TEAM */}
-      <RevealSection
-        className="py-10 bg-gradient-to-b from-yellow-50/50 to-white"
-        delay={0.05}>
-        <Container>
-          <StylishHeading icon="💪">Our Pillars</StylishHeading>
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-12">
-            {team.map((member, i) => (
-              <div
-                key={member.name}
-                style={{ transitionDelay: `${i * 80}ms` }}
-                className="group relative bg-white/60 backdrop-blur rounded-3xl p-5 shadow-lg ring-1 ring-yellow-100 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-yellow-200">
-                <div className="relative h-72 w-full rounded-2xl overflow-hidden mb-5">
+        {/* WHY WE EXIST + VALUES GRID */}
+        <RevealSection className="py-10" delay={0.1}>
+          <Container className="max-w-6xl">
+            <div className="grid lg:grid-cols-5 gap-14 items-start">
+              <div className="lg:col-span-2 space-y-8">
+                <div className="relative h-80 rounded-3xl overflow-hidden shadow-xl ring-1 ring-yellow-200/60 group">
                   <Image
-                    src={member.image}
-                    alt={member.name}
+                    src="https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2"
+                    alt="Purpose driven"
                     fill
-                    className="md:object-cover object-contain group-hover:scale-105 transition-transform duration-[1600ms]"
+                    className="object-cover group-hover:scale-105 transition-transform duration-[2500ms]"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
-                  <div className="absolute bottom-3 left-3 text-white font-semibold text-xs sm:text-sm px-3 py-1 rounded-full bg-black/35 backdrop-blur">
-                    {member.role}
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white font-semibold text-sm tracking-wider uppercase flex items-center gap-2">
+                    <span className="inline-block w-2 h-2 rounded-full bg-yellow-400" />{" "}
+                    PURPOSE DRIVEN
                   </div>
                 </div>
-                <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-tight">
-                  {member.name}
-                </h3>
-                <p className="text-xs text-gray-600 leading-relaxed font-medium">
-                  {member.blurb}
-                </p>
-              </div>
-            ))}
-          </div>
-        </Container>
-      </RevealSection>
-
-      {/* STATS */}
-      <RevealSection className="py-10" delay={0.05}>
-        <Container className="space-y-10">
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {statsPrimary.map((s, i) => (
-              <StatCard
-                key={s.label}
-                index={i}
-                value={s.value}
-                label={s.label}
-                accent
-              />
-            ))}
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {statsSecondary.map((s, i) => (
-              <StatCard
-                key={s.label}
-                index={i}
-                value={s.value}
-                label={s.label}
-              />
-            ))}
-          </div>
-          <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-yellow-100/60">
-            {reachStats.map((s, i) => (
-              <div
-                key={s.label}
-                className="relative rounded-3xl bg-white/80 backdrop-blur p-6 ring-1 ring-yellow-100 shadow-sm hover:shadow-xl transition"
-                style={{ transitionDelay: `${i * 70}ms` }}>
-                <Counter
-                  target={parseInt(s.value)}
-                  suffix={s.value.includes("+") ? "+" : ""}
-                />
-                <div className="text-[11px] font-semibold tracking-widest text-yellow-600">
-                  {s.label}
+                <div className="grid sm:grid-cols-2 gap-4">
+                  {values.map((v) => (
+                    <div
+                      key={v.title}
+                      className="relative p-5 rounded-2xl bg-white/70 backdrop-blur border border-yellow-100 shadow-sm hover:shadow-xl transition group overflow-hidden">
+                      <div className="absolute inset-0 opacity-0 group-hover:opacity-100 bg-gradient-to-br from-yellow-100/30 to-yellow-50/10 transition" />
+                      <h4 className="font-bold text-gray-900 mb-1 tracking-tight flex items-center gap-2">
+                        <span className="w-1.5 h-1.5 rounded-full bg-yellow-500" />
+                        {v.title}
+                      </h4>
+                      <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                        {v.text}
+                      </p>
+                    </div>
+                  ))}
                 </div>
               </div>
-            ))}
-          </div>
-        </Container>
-      </RevealSection>
+              <div className="lg:col-span-3 space-y-8">
+                <StylishHeading icon="🌍">
+                  Why We Exist & Where We’re Headed
+                </StylishHeading>
+                <RichText>
+                  <p>
+                    Travel isn&apos;t just about places — it&apos;s about
+                    purpose. We&apos;re building a platform that connects
+                    wanderers with meaningful adventures, eco-conscious stays
+                    and a community of like-minded travelers.
+                  </p>
+                  <p>
+                    We don&apos;t just link trips. We link people. We link
+                    stories. We link experiences. And we&apos;re just getting
+                    started.
+                  </p>
+                </RichText>
+                <Timeline />
+              </div>
+            </div>
+          </Container>
+        </RevealSection>
 
-      {/* VISION CTA */}
-      <RevealSection
-        className="py-10 bg-gradient-to-br from-yellow-600 via-yellow-500 to-yellow-400 text-white relative overflow-hidden"
-        delay={0.05}>
-        <div className="absolute inset-0 opacity-30 mix-blend-overlay" />
-        <Container className="relative z-10 max-w-4xl text-center">
-          <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-6">
-            Our Vision
-          </h2>
-          <p className="text-lg md:text-xl font-medium leading-relaxed mb-12">
-            Drowning in deadlines while your soul whispers ‘Himalayas’? We hear
-            you. You hustle hard — let us craft the escape you’ve earned. The
-            next chapter is community, authenticity & unforgettable
-            impact-driven journeys.
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold">
-            {[
-              "24/7 SUPPORT",
-              "EASY BOOKING",
-              "CUSTOMER FIRST",
-              "HASSLE FREE",
-            ].map((b) => (
-              <span
-                key={b}
-                className="px-4 py-2 rounded-full bg-white/15 backdrop-blur border border-white/20 hover:bg-white/25 transition">
-                {b}
-              </span>
-            ))}
-          </div>
-        </Container>
-      </RevealSection>
+        {/* TEAM */}
+        <RevealSection
+          className="py-10 bg-gradient-to-b from-yellow-50/50 to-white"
+          delay={0.05}>
+          <Container>
+            <StylishHeading icon="💪">Our Pillars</StylishHeading>
+            <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 mt-12">
+              {team.map((member, i) => (
+                <div
+                  key={member.name}
+                  style={{ transitionDelay: `${i * 80}ms` }}
+                  className="group relative bg-white/60 backdrop-blur rounded-3xl p-5 shadow-lg ring-1 ring-yellow-100 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 hover:border-yellow-200">
+                  <div className="relative h-72 w-full rounded-2xl overflow-hidden mb-5">
+                    <Image
+                      src={member.image}
+                      alt={member.name}
+                      fill
+                      className="md:object-cover object-contain group-hover:scale-105 transition-transform duration-[1600ms]"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/55 via-black/10 to-transparent" />
+                    <div className="absolute bottom-3 left-3 text-white font-semibold text-xs sm:text-sm px-3 py-1 rounded-full bg-black/35 backdrop-blur">
+                      {member.role}
+                    </div>
+                  </div>
+                  <h3 className="text-lg font-bold text-gray-900 mb-2 tracking-tight">
+                    {member.name}
+                  </h3>
+                  <p className="text-xs text-gray-600 leading-relaxed font-medium">
+                    {member.blurb}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </RevealSection>
 
-      {/* CONTACT */}
-      <RevealSection className="py-10" delay={0.05}>
-        <Container className="max-w-4xl text-center space-y-10">
-          <h2 className="text-3xl md:text-4xl font-black tracking-tight">
-            Ready To Link Your Next Journey?
-          </h2>
-          <p className="text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
-            OFFICE NO. 406 - 4TH FLOOR, VDS BUILDING, H-159, H BLOCK, SECTOR 63
-            NOIDA, UTTAR PRADESH 201301
-            <br />
-            Phone:{" "}
-            <a
-              href="tel:+917838720559"
-              className="text-yellow-600 font-semibold hover:underline">
-              +91 7838720559
-            </a>
-          </p>
-          <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-700">
-            <SocialLink href="https://youtube.com/@trip-link">
-              YouTube
-            </SocialLink>
-            <SocialLink href="https://www.linkedin.com/company/triplink-adventures/">
-              LinkedIn
-            </SocialLink>
-            <SocialLink href="https://www.facebook.com/share/16avXaLMS2/?mibextid=wwXIfr">
-              Facebook
-            </SocialLink>
-            <SocialLink href="https://www.instagram.com/triplink_adventures">
-              Instagram
-            </SocialLink>
-          </div>
-        </Container>
-      </RevealSection>
+        {/* STATS */}
+        <RevealSection className="py-10" delay={0.05}>
+          <Container className="space-y-10">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {statsPrimary.map((s, i) => (
+                <StatCard
+                  key={s.label}
+                  index={i}
+                  value={s.value}
+                  label={s.label}
+                  accent
+                />
+              ))}
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              {statsSecondary.map((s, i) => (
+                <StatCard
+                  key={s.label}
+                  index={i}
+                  value={s.value}
+                  label={s.label}
+                />
+              ))}
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6 pt-4 border-t border-yellow-100/60">
+              {reachStats.map((s, i) => (
+                <div
+                  key={s.label}
+                  className="relative rounded-3xl bg-white/80 backdrop-blur p-6 ring-1 ring-yellow-100 shadow-sm hover:shadow-xl transition"
+                  style={{ transitionDelay: `${i * 70}ms` }}>
+                  <Counter
+                    target={parseInt(s.value)}
+                    suffix={s.value.includes("+") ? "+" : ""}
+                  />
+                  <div className="text-[11px] font-semibold tracking-widest text-yellow-600">
+                    {s.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </Container>
+        </RevealSection>
+
+        {/* VISION CTA */}
+        <RevealSection
+          className="py-10 bg-gradient-to-br from-yellow-600/80 via-yellow-500 to-yellow-400 text-white relative overflow-hidden"
+          delay={0.05}>
+          <div className="absolute inset-0 opacity-30 mix-blend-overlay" />
+          <Container className="relative z-10 max-w-4xl text-center">
+            <h2 className="text-3xl md:text-5xl font-black tracking-tight mb-6">
+              Our Vision
+            </h2>
+            <p className="text-lg md:text-xl font-medium leading-relaxed mb-12">
+              Drowning in deadlines while your soul whispers ‘Himalayas’? We
+              hear you. You hustle hard — let us craft the escape you’ve earned.
+              The next chapter is community, authenticity & unforgettable
+              impact-driven journeys.
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold">
+              {[
+                "24/7 SUPPORT",
+                "EASY BOOKING",
+                "CUSTOMER FIRST",
+                "HASSLE FREE",
+              ].map((b) => (
+                <span
+                  key={b}
+                  className="px-4 py-2 rounded-full bg-white/15 backdrop-blur border border-white/20 hover:bg-white/25 transition">
+                  {b}
+                </span>
+              ))}
+            </div>
+          </Container>
+        </RevealSection>
+
+        {/* CONTACT */}
+        <RevealSection className="py-10" delay={0.05}>
+          <Container className="max-w-4xl text-center space-y-10">
+            <h2 className="text-3xl md:text-4xl font-black tracking-tight">
+              Ready To Link Your Next Journey?
+            </h2>
+            <p className="text-gray-600 font-medium max-w-2xl mx-auto leading-relaxed">
+              OFFICE NO. 406 - 4TH FLOOR, VDS BUILDING, H-159, H BLOCK, SECTOR
+              63 NOIDA, UTTAR PRADESH 201301
+              <br />
+              Phone:{" "}
+              <a
+                href="tel:+917838720559"
+                className="text-yellow-600 font-semibold hover:underline">
+                +91 7838720559
+              </a>
+            </p>
+            <div className="flex flex-wrap justify-center gap-4 text-xs font-semibold text-gray-700">
+              <SocialLink href="https://youtube.com/@trip-link">
+                YouTube
+              </SocialLink>
+              <SocialLink href="https://www.linkedin.com/company/triplink-adventures/">
+                LinkedIn
+              </SocialLink>
+              <SocialLink href="https://www.facebook.com/share/16avXaLMS2/?mibextid=wwXIfr">
+                Facebook
+              </SocialLink>
+              <SocialLink href="https://www.instagram.com/triplink_adventures">
+                Instagram
+              </SocialLink>
+            </div>
+          </Container>
+        </RevealSection>
+      </div>
       <Footer />
     </>
   );

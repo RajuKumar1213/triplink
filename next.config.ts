@@ -20,6 +20,11 @@ const nextConfig: NextConfig = {
       "images.unsplash.com",
       "images.mid-day.com",
       "yt3.googleusercontent.com",
+      "www.tourmyindia.com",
+      "www.holidify.com",
+      "www.fabhotels.com",
+      "static.toiimg.com",
+      "cdn.pixabay.com"
     ],
   },
 };

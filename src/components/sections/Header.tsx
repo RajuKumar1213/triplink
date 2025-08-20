@@ -32,7 +32,7 @@ export function Header() {
                   <Image
                     src="/triplink-logo.png"
                     alt="TripLink Adventures"
-                    className="h-10 w-auto"
+                    className="md:h-10 h-6 w-auto"
                     width={120}
                     height={40}
                   />

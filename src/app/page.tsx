@@ -7,6 +7,8 @@ import { FAQSection } from "@/components/sections/FAQSection";
 import { Footer } from "@/components/sections/Footer";
 import TripLinkAdventures from "@/components/sections/TripLinkAdventures";
 import Image from "next/image";
+import { backgroundImage } from "../constant";
+import PopUpForm from "@/components/PopUpForm";
 
 export default function Home() {
   return (
@@ -15,21 +17,16 @@ export default function Home() {
       <main>
         <HeroSection />
         <BookingForm />
-        {/* <FeaturedDestinations /> */}
-
-        {/* Background Section with Gradient Image */}
         <div className="relative">
-          <div className="absolute inset-0 opacity-30">
+          <div className="absolute inset-0 opacity-20">
             <Image
-              src="https://i.pinimg.com/originals/9a/f0/d4/9af0d4299c57963724ea1a6b45b8ec0c.jpg"
+              src={backgroundImage}
               alt="Backgroundttp"
               fill
               className="object-cover object-center"
               priority={false}
             />
           </div>
-
-          {/* Components on top of background */}
           <div className="relative">
             <InternationalDestinations />
             <DomesticDestinations />
@@ -39,7 +36,7 @@ export default function Home() {
 
         <FAQSection />
       </main>
-
+      <PopUpForm/>
       <Footer />
     </div>
   );

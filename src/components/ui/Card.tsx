@@ -141,11 +141,11 @@ export function TravelCard({
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-lg sm:text-2xl font-bold text-gray-900">
-                ₹{price.toLocaleString()}
+                ₹{price.toLocaleString('en-IN')}
               </span>
               {originalPrice && (
                 <span className="text-sm sm:text-lg text-gray-500 line-through">
-                  ₹{originalPrice.toLocaleString()}
+                  ₹{originalPrice.toLocaleString('en-IN')}
                 </span>
               )}
             </div>
