@@ -52,6 +52,12 @@ const TripLinkAdventures = () => {
       icon: "🏛️",
       gradient: "from-amber-500 to-yellow-500",
     },
+    {
+      id: "50+",
+      label: "50+ Adventures",
+      icon: "",
+      gradient: "from-amber-500 to-yellow-500",
+    },
   ];
 
   const adventures = [
@@ -216,7 +222,7 @@ const TripLinkAdventures = () => {
   }, [testimonials.length]);
 
   return (
-  <section className="pb-10 relative overflow-hidden">
+    <section className="pb-10 relative overflow-hidden">
       {/* Background Pattern */}
       <div className="absolute inset-0 opacity-5">
         <div
@@ -284,7 +290,8 @@ const TripLinkAdventures = () => {
                 activeCategory === category.id
                   ? "bg-yellow-500 text-white shadow-lg scale-105"
                   : "bg-white text-gray-700 hover:bg-yellow-50 border border-gray-200 hover:border-yellow-500 shadow-md"
-              }`}>
+              }`}
+            >
               <span className="text-lg mr-2">{category.icon}</span>
               {category.label}
             </button>
@@ -292,7 +299,7 @@ const TripLinkAdventures = () => {
         </div>
 
         {/* Adventures Grid with TravelCard */}
-  <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
           {filteredAdventures.map((adventure) => (
             <TravelCard
               key={adventure.id}
@@ -313,7 +320,7 @@ const TripLinkAdventures = () => {
         </div>
 
         {/* Enhanced Testimonials */}
-  <div className="relative bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl p-6 sm:p-8 shadow-xl mb-12">
+        <div className="relative bg-gradient-to-r from-yellow-500 to-amber-600 rounded-2xl p-6 sm:p-8 shadow-xl mb-12">
           <div className="absolute inset-0 bg-black/5 rounded-2xl" />
           <div className="relative z-10">
             <div className="text-center mb-8">
@@ -384,26 +391,28 @@ const TripLinkAdventures = () => {
         </div>
 
         {/* Enhanced CTA Section */}
-    <div className="text-center bg-gradient-to-r from-gray-50 to-yellow-50 rounded-2xl p-6 sm:p-8">
+        <div className="text-center bg-gradient-to-r from-gray-50 to-yellow-50 rounded-2xl p-6 sm:p-8">
           <div className="max-w-3xl mx-auto">
-      <h3 className="text-xl md:text-3xl font-black text-gray-900 mb-3">
+            <h3 className="text-xl md:text-3xl font-black text-gray-900 mb-3">
               Your Next Adventure Awaits
             </h3>
-      <p className="text-sm sm:text-base text-gray-600 mb-6 leading-relaxed">
+            <p className="text-sm sm:text-base text-gray-600 mb-6 leading-relaxed">
               Join over 50,000 adventurers who have discovered their passion for
               exploration with TripLink Adventures.
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button
                 size="lg"
-        className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-xl text-sm sm:text-base shadow-lg transform hover:scale-105 transition-all duration-300">
+                className="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-3 px-6 rounded-xl text-sm sm:text-base shadow-lg transform hover:scale-105 transition-all duration-300"
+              >
                 <Camera className="h-5 w-5 mr-2" />
                 Start Your Adventure
               </Button>
               <Button
                 variant="outline"
                 size="lg"
-        className="border-2 border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white font-bold py-3 px-6 rounded-xl text-sm sm:text-base shadow-md transform hover:scale-105 transition-all duration-300">
+                className="border-2 border-gray-800 text-gray-800 hover:bg-gray-800 hover:text-white font-bold py-3 px-6 rounded-xl text-sm sm:text-base shadow-md transform hover:scale-105 transition-all duration-300"
+              >
                 <Users className="h-5 w-5 mr-2" />
                 Join Our Community
               </Button>

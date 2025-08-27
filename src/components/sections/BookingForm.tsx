@@ -23,19 +23,28 @@ export function BookingForm() {
   };
 
   return (
-    <section className="my-5 ">
+    <section className="my-10">
       <Container>
-        <div className="max-w-6xl mx-auto">
-          <div className="text-center md:mb-6 mb-1">
-            <h2 className="text-xl sm:text-4xl font-bold text-gray-900 mb-4">
-              Holiday Packages
+        <div className="max-w-5xl mx-auto">
+          {/* Heading */}
+          <div className="text-center md:mb-8 mb-4">
+            <h2 className="text-2xl sm:text-5xl font-extrabold text-gray-900 mb-2 tracking-tight">
+              ✈️ Holiday Packages
             </h2>
+            <p className="text-gray-600 text-sm sm:text-base">
+              Book your dream holiday in just a few clicks
+            </p>
           </div>
 
-      <div className="bg-white rounded-2xl shadow-xl p-5 sm:p-8">
+          {/* Form Card */}
+          <div className="bg-white rounded-2xl shadow-2xl p-6 sm:p-10 border border-yellow-400/40">
             <form onSubmit={handleSubmit}>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-3 sm:gap-4 items-end">
+              <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
+                {/* Name */}
                 <div>
+                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
+                    Full Name
+                  </label>
                   <input
                     type="text"
                     id="name"
@@ -43,12 +52,16 @@ export function BookingForm() {
                     value={formData.name}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 sm:py-3 border-2 border-yellow-400 rounded focus:border-blue-500 focus:outline-none transition-colors duration-200 text-sm"
-                    placeholder="Name"
+                    className="w-full px-4 py-3 border-2 border-yellow-400 rounded-lg font-medium shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200 text-sm sm:text-base"
+                    placeholder="John Doe"
                   />
                 </div>
-                
+
+                {/* Email */}
                 <div>
+                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+                    Email
+                  </label>
                   <input
                     type="email"
                     id="email"
@@ -56,12 +69,16 @@ export function BookingForm() {
                     value={formData.email}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 sm:py-3 border-2 border-yellow-400 rounded focus:border-blue-500 focus:outline-none transition-colors duration-200 text-sm"
-                    placeholder="Email Address"
+                    className="w-full px-4 py-3 border-2 border-yellow-400 rounded-lg font-medium shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200 text-sm sm:text-base"
+                    placeholder="you@email.com"
                   />
                 </div>
-                
+
+                {/* Phone */}
                 <div>
+                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-1">
+                    Phone
+                  </label>
                   <input
                     type="tel"
                     id="phone"
@@ -69,24 +86,27 @@ export function BookingForm() {
                     value={formData.phone}
                     onChange={handleChange}
                     required
-                    className="w-full px-3 py-2 sm:py-3 border-2 border-yellow-400 rounded focus:border-blue-500 focus:outline-none transition-colors duration-200 text-sm"
-                    placeholder="Phone number"
+                    className="w-full px-4 py-3 border-2 border-yellow-400 rounded-lg font-medium shadow-sm focus:border-blue-500 focus:ring-2 focus:ring-blue-300 outline-none transition duration-200 text-sm sm:text-base"
+                    placeholder="+91 98765 43210"
                   />
                 </div>
-                
+
+                {/* Button */}
                 <div>
                   <button
                     type="submit"
-                    className="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-2 sm:py-3 px-4 rounded transition-colors duration-200 text-sm"
+                    className="w-full bg-gradient-to-r from-yellow-500 to-yellow-600 hover:from-yellow-600 hover:to-yellow-700 text-white font-bold py-3 px-5 rounded-lg shadow-md hover:shadow-lg transform hover:scale-[1.02] transition duration-200 text-sm sm:text-base"
                   >
-                    Submit
+                    🚀 Submit
                   </button>
                 </div>
               </div>
             </form>
-            
-            <div className="mt-4 text-center text-xs sm:text-sm text-gray-600 leading-snug">
-              I accept ✓ the Privacy Policy and authorise Thomas Cook and Group of Companies to contact me with details
+
+            {/* Footer note */}
+            <div className="mt-6 text-center text-xs sm:text-sm text-gray-600 leading-snug">
+              ✅ I accept the <span className="font-semibold text-gray-800">Privacy Policy</span> and authorise{" "}
+              <span className="font-bold text-yellow-600">Triplink & Co.</span> to contact me with details.
             </div>
           </div>
         </div>

@@ -7,6 +7,7 @@ const quickLinks = [
   { label: "Celebrity Tours", href: "/celebrity" },
   { label: "Corporate Tours", href: "/corporate" },
   { label: "About Us", href: "/about" },
+  { label: "Blogs", href: "/blog" },
   { label: "Terms and Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
 ];

@@ -1,0 +1,340 @@
+"use client";
+
+import React, { useState } from 'react';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+import {
+  LayoutDashboard,
+  Users,
+  Calendar,
+  CreditCard,
+  Settings,
+  BarChart3,
+  FileText,
+  HelpCircle,
+  Menu,
+  X,
+  ChevronDown
+} from 'lucide-react';
+
+const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
+  const pathname = usePathname();
+
+  const navigation = [
+    {
+      name: 'Dashboard',
+      href: '/admin',
+      icon: LayoutDashboard,
+      current: pathname === '/admin'
+    },
+    {
+      name: 'Users',
+      href: '/admin/users',
+      icon: Users,
+      current: pathname === '/admin/users'
+    },
+    {
+      name: 'Bookings',
+      href: '/admin/bookings',
+      icon: Calendar,
+      current: pathname === '/admin/bookings'
+    },
+    {
+      name: 'Payments',
+      href: '/admin/payments',
+      icon: CreditCard,
+      current: pathname === '/admin/payments',
+      dropdown: [
+        { name: 'Transactions', href: '/admin/payments/transactions' },
+        { name: 'Invoices', href: '/admin/payments/invoices' },
+        { name: 'Refunds', href: '/admin/payments/refunds' }
+      ]
+    },
+    {
+      name: 'Analytics',
+      href: '/admin/analytics',
+      icon: BarChart3,
+      current: pathname === '/admin/analytics'
+    },
+    {
+      name: 'Content',
+      href: '/admin/content',
+      icon: FileText,
+      current: pathname === '/admin/content',
+      dropdown: [
+        { name: 'Blog Posts', href: '/admin/content/blog' },
+        { name: 'Pages', href: '/admin/content/pages' },
+        { name: 'Testimonials', href: '/admin/content/testimonials' }
+      ]
+    },
+    {
+      name: 'Settings',
+      href: '/admin/settings',
+      icon: Settings,
+      current: pathname === '/admin/settings',
+      dropdown: [
+        { name: 'General', href: '/admin/settings/general' },
+        { name: 'Notifications', href: '/admin/settings/notifications' },
+        { name: 'Security', href: '/admin/settings/security' }
+      ]
+    }
+  ];
+
+  const toggleDropdown = (name: string) => {
+    if (activeDropdown === name) {
+      setActiveDropdown(null);
+    } else {
+      setActiveDropdown(name);
+    }
+  };
+
+  return (
+    <div className="flex h-screen bg-gray-100">
+      {/* Sidebar for mobile */}
+      <div className={`fixed inset-0 z-50 md:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
+        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
+        <div className="relative flex flex-col w-64 h-full bg-gray-900">
+          <div className="flex items-center justify-between h-16 px-4 bg-gray-800">
+            <span className="text-white font-bold text-xl">TripLink Admin</span>
+            <button
+              onClick={() => setSidebarOpen(false)}
+              className="text-gray-400 hover:text-white"
+            >
+              <X className="h-6 w-6" />
+            </button>
+          </div>
+          <div className="flex-1 overflow-y-auto">
+            <nav className="mt-5 px-2 space-y-1">
+              {navigation.map((item) => (
+                <div key={item.name}>
+                  {item.dropdown ? (
+                    <div>
+                      <button
+                        onClick={() => toggleDropdown(item.name)}
+                        className={`group flex items-center px-2 py-2 text-base font-medium rounded-md w-full justify-between ${
+                          item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <item.icon className="mr-4 h-6 w-6" />
+                          {item.name}
+                        </div>
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform ${
+                            activeDropdown === item.name ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {activeDropdown === item.name && (
+                        <div className="mt-1 ml-8 space-y-1">
+                          {item.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              href={subItem.href}
+                              className="group flex items-center px-2 py-2 text-base font-medium rounded-md text-gray-300 hover:bg-gray-700 hover:text-white"
+                              onClick={() => setSidebarOpen(false)}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
+                        item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      }`}
+                      onClick={() => setSidebarOpen(false)}
+                    >
+                      <item.icon className="mr-4 h-6 w-6" />
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+          <div className="flex-shrink-0 flex bg-gray-700 p-4">
+            <div className="flex items-center">
+              <div className="flex-shrink-0">
+                <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                  A
+                </div>
+              </div>
+              <div className="ml-3">
+                <p className="text-sm font-medium text-white">Admin User</p>
+                <p className="text-xs font-medium text-gray-300">admin@triplink.com</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Static sidebar for desktop */}
+      <div className="hidden md:flex md:w-64 md:flex-col md:fixed md:inset-y-0">
+        <div className="flex flex-col flex-grow bg-gray-900 pt-5 overflow-y-auto">
+          <div className="flex items-center flex-shrink-0 px-4">
+            <span className="text-white font-bold text-xl">TripLink Admin</span>
+          </div>
+          <div className="mt-5 flex-1 flex flex-col">
+            <nav className="flex-1 px-2 pb-4 space-y-1">
+              {navigation.map((item) => (
+                <div key={item.name}>
+                  {item.dropdown ? (
+                    <div>
+                      <button
+                        onClick={() => toggleDropdown(item.name)}
+                        className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full justify-between ${
+                          item.current || (item.dropdown && item.dropdown.some(subItem => subItem.href === pathname))
+                            ? 'bg-gray-800 text-white'
+                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        }`}
+                      >
+                        <div className="flex items-center">
+                          <item.icon className="mr-3 h-6 w-6" />
+                          {item.name}
+                        </div>
+                        <ChevronDown
+                          className={`h-4 w-4 transition-transform ${
+                            activeDropdown === item.name ? 'rotate-180' : ''
+                          }`}
+                        />
+                      </button>
+                      {activeDropdown === item.name && (
+                        <div className="mt-1 ml-8 space-y-1">
+                          {item.dropdown.map((subItem) => (
+                            <Link
+                              key={subItem.name}
+                              href={subItem.href}
+                              className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                                pathname === subItem.href
+                                  ? 'bg-gray-800 text-white'
+                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                              }`}
+                            >
+                              {subItem.name}
+                            </Link>
+                          ))}
+                        </div>
+                      )}
+                    </div>
+                  ) : (
+                    <Link
+                      href={item.href}
+                      className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
+                        item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                      }`}
+                    >
+                      <item.icon className="mr-3 h-6 w-6" />
+                      {item.name}
+                    </Link>
+                  )}
+                </div>
+              ))}
+            </nav>
+          </div>
+          <div className="flex-shrink-0 flex bg-gray-700 p-4">
+            <div className="flex items-center w-full">
+              <div className="flex-shrink-0">
+                <div className="h-10 w-10 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                  A
+                </div>
+              </div>
+              <div className="ml-3 flex-1">
+                <p className="text-sm font-medium text-white">Admin User</p>
+                <p className="text-xs font-medium text-gray-300">admin@triplink.com</p>
+              </div>
+              <div className="ml-auto">
+                <button className="text-gray-300 hover:text-white">
+                  <Settings className="h-5 w-5" />
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Main content */}
+      <div className="md:pl-64 flex flex-col flex-1">
+        {/* Top header */}
+        <div className="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white shadow">
+          <button
+            type="button"
+            className="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-indigo-500 md:hidden"
+            onClick={() => setSidebarOpen(true)}
+          >
+            <span className="sr-only">Open sidebar</span>
+            <Menu className="h-6 w-6" />
+          </button>
+          <div className="flex-1 px-4 flex justify-between">
+            <div className="flex-1 flex">
+              <div className="w-full flex md:ml-0">
+                <div className="relative w-full text-gray-400 focus-within:text-gray-600">
+                  <div className="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                    <svg
+                      className="h-5 w-5"
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 20 20"
+                      fill="currentColor"
+                      aria-hidden="true"
+                    >
+                      <path
+                        fillRule="evenodd"
+                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                        clipRule="evenodd"
+                      />
+                    </svg>
+                  </div>
+                  <input
+                    id="search-field"
+                    className="block w-full h-full pl-8 pr-3 py-2 border-transparent text-gray-900 placeholder-gray-500 focus:outline-none focus:placeholder-gray-400 focus:ring-0 focus:border-transparent sm:text-sm"
+                    placeholder="Search"
+                    type="search"
+                    name="search"
+                  />
+                </div>
+              </div>
+            </div>
+            <div className="ml-4 flex items-center md:ml-6">
+              <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                <HelpCircle className="h-6 w-6" />
+              </button>
+
+              {/* Profile dropdown */}
+              <div className="ml-3 relative">
+                <div>
+                  <button className="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+                    <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
+                      A
+                    </div>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <main className="flex-1">
+          <div className="py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              {/* Page heading */}
+              <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+            </div>
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              {/* Content area */}
+              <div className="py-4">
+                {children}
+              </div>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+export default AdminLayout;

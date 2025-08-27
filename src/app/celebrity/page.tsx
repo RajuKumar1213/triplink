@@ -97,7 +97,8 @@ export default function CelebrityPage() {
                 {carouselImages.map((src, i) => (
                   <div
                     key={src + i}
-                    className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 overflow-hidden bg-gray-100 shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50">
+                    className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 overflow-hidden bg-gray-100 shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50"
+                  >
                     <Image
                       src={src}
                       alt={`Celebrity image ${i + 1}`}
