@@ -9,9 +9,10 @@ interface ErrorWithStatus extends Error {
 }
 
 export const GET = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
-    const packageData = await Package.findById(params.id).lean();
+    const { id } = await params;
+    const packageData = await Package.findById(id).lean();
     if (!packageData) {
       const error = new Error("Package not found") as ErrorWithStatus;
       error.status = 404;
@@ -25,15 +26,16 @@ export const GET = asyncHandler(
 );
 
 export const PUT = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
+    const { id } = await params;
     const body: Partial<IPackage> = await request.json();
 
     // Check for duplicate slug if updated
     if (body.slug) {
       const existingPackage = await Package.findOne({
         slug: body.slug,
-        _id: { $ne: params.id },
+        _id: { $ne: id },
       });
       if (existingPackage) {
         const error = new Error(
@@ -45,7 +47,7 @@ export const PUT = asyncHandler(
     }
 
     const packageData = await Package.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -62,9 +64,10 @@ export const PUT = asyncHandler(
 );
 
 export const DELETE = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
-    const packageData = await Package.findByIdAndDelete(params.id);
+    const { id } = await params;
+    const packageData = await Package.findByIdAndDelete(id);
     if (!packageData) {
       const error = new Error("Package not found") as ErrorWithStatus;
       error.status = 404;

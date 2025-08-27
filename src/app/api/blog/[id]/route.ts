@@ -1,8 +1,7 @@
 import { NextResponse } from "next/server";
 import { asyncHandler } from "@/lib/asyncHandler";
-import Adventure from "@/models/Adventure";
-import Category from "@/models/Category";
-import { IAdventure } from "@/types/adventure";
+import Blog from "@/models/Blog";
+import { IBlog } from "@/types/blog";
 import connectDb from "@/db/connectDb";
 
 interface ErrorWithStatus extends Error {
@@ -13,16 +12,14 @@ export const GET = asyncHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
     const { id } = await params;
-    const adventure = await Adventure.findById(id)
-      .populate("category")
-      .lean();
-    if (!adventure) {
-      const error = new Error("Adventure not found") as ErrorWithStatus;
+    const blog = await Blog.findById(id).lean();
+    if (!blog) {
+      const error = new Error("Blog not found") as ErrorWithStatus;
       error.status = 404;
       throw error;
     }
     return NextResponse.json(
-      { success: true, data: adventure },
+      { success: true, data: blog },
       { status: 200 }
     );
   }
@@ -32,30 +29,35 @@ export const PUT = asyncHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
     const { id } = await params;
-    const body: Partial<IAdventure> = await request.json();
+    const body: Partial<IBlog> = await request.json();
 
-    // Validate category if provided
-    if (body.category) {
-      const category = await Category.findById(body.category);
-      if (!category) {
-        const error = new Error("Invalid category ID") as ErrorWithStatus;
+    // Check for duplicate slug if updated
+    if (body.slug) {
+      const existingBlog = await Blog.findOne({
+        slug: body.slug,
+        _id: { $ne: id },
+      });
+      if (existingBlog) {
+        const error = new Error(
+          "Blog slug already exists"
+        ) as ErrorWithStatus;
         error.status = 400;
         throw error;
       }
     }
 
-    const adventure = await Adventure.findByIdAndUpdate(
+    const blog = await Blog.findByIdAndUpdate(
       id,
       { $set: body },
       { new: true, runValidators: true }
-    ).populate("category");
-    if (!adventure) {
-      const error = new Error("Adventure not found") as ErrorWithStatus;
+    );
+    if (!blog) {
+      const error = new Error("Blog not found") as ErrorWithStatus;
       error.status = 404;
       throw error;
     }
     return NextResponse.json(
-      { success: true, data: adventure },
+      { success: true, data: blog },
       { status: 200 }
     );
   }
@@ -65,9 +67,9 @@ export const DELETE = asyncHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
     const { id } = await params;
-    const adventure = await Adventure.findByIdAndDelete(id);
-    if (!adventure) {
-      const error = new Error("Adventure not found") as ErrorWithStatus;
+    const blog = await Blog.findByIdAndDelete(id);
+    if (!blog) {
+      const error = new Error("Blog not found") as ErrorWithStatus;
       error.status = 404;
       throw error;
     }

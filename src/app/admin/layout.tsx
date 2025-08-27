@@ -2,84 +2,82 @@
 
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { usePathname } from 'next/navigation';
+import { usePathname, useRouter } from 'next/navigation';
 import {
   LayoutDashboard,
   Users,
-  Calendar,
-  CreditCard,
   Settings,
-  BarChart3,
-  FileText,
   HelpCircle,
   Menu,
   X,
-  ChevronDown
+  ChevronDown,
+  Package,
+  Video,
+  LogOut,
 } from 'lucide-react';
+
+interface NavigationItem {
+  name: string;
+  href: string;
+  icon: React.ComponentType<any>;
+  current: boolean;
+  dropdown?: { name: string; href: string }[];
+}
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const [sidebarOpen, setSidebarOpen] = useState(false);
   const [activeDropdown, setActiveDropdown] = useState<string | null>(null);
   const pathname = usePathname();
+  const router = useRouter();
 
-  const navigation = [
+  const handleLogout = async () => {
+    try {
+      await fetch('/api/auth/logout', {
+        method: 'POST',
+      });
+      router.push('/admin-login');
+    } catch (error) {
+      console.error('Logout failed:', error);
+    }
+  };
+
+  const navigation: NavigationItem[] = [
     {
       name: 'Dashboard',
       href: '/admin',
       icon: LayoutDashboard,
       current: pathname === '/admin'
     },
+  
     {
-      name: 'Users',
-      href: '/admin/users',
+      name: 'adventure',
+      href: '/admin/adventure',
       icon: Users,
-      current: pathname === '/admin/users'
+      current: pathname === '/admin/adventure'
+    },
+      {
+      name: 'category',
+      href: '/admin/category',
+      icon: Users,
+      current: pathname === '/admin/category'
     },
     {
-      name: 'Bookings',
-      href: '/admin/bookings',
-      icon: Calendar,
-      current: pathname === '/admin/bookings'
+      name: 'package',
+      href: '/admin/pakage',
+      icon: Package,
+      current: pathname === '/admin/pakage'
     },
+
     {
-      name: 'Payments',
-      href: '/admin/payments',
-      icon: CreditCard,
-      current: pathname === '/admin/payments',
-      dropdown: [
-        { name: 'Transactions', href: '/admin/payments/transactions' },
-        { name: 'Invoices', href: '/admin/payments/invoices' },
-        { name: 'Refunds', href: '/admin/payments/refunds' }
-      ]
+      name: 'blog',
+      href: '/admin/blog',
+      icon: Video,
+      current: pathname === '/admin/blog'
     },
-    {
-      name: 'Analytics',
-      href: '/admin/analytics',
-      icon: BarChart3,
-      current: pathname === '/admin/analytics'
-    },
-    {
-      name: 'Content',
-      href: '/admin/content',
-      icon: FileText,
-      current: pathname === '/admin/content',
-      dropdown: [
-        { name: 'Blog Posts', href: '/admin/content/blog' },
-        { name: 'Pages', href: '/admin/content/pages' },
-        { name: 'Testimonials', href: '/admin/content/testimonials' }
-      ]
-    },
-    {
-      name: 'Settings',
-      href: '/admin/settings',
-      icon: Settings,
-      current: pathname === '/admin/settings',
-      dropdown: [
-        { name: 'General', href: '/admin/settings/general' },
-        { name: 'Notifications', href: '/admin/settings/notifications' },
-        { name: 'Security', href: '/admin/settings/security' }
-      ]
-    }
+    
+    
+    
+    
   ];
 
   const toggleDropdown = (name: string) => {
@@ -101,6 +99,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
             <button
               onClick={() => setSidebarOpen(false)}
               className="text-gray-400 hover:text-white"
+              title="Close sidebar"
             >
               <X className="h-6 w-6" />
             </button>
@@ -249,7 +248,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                 <p className="text-xs font-medium text-gray-300">admin@triplink.com</p>
               </div>
               <div className="ml-auto">
-                <button className="text-gray-300 hover:text-white">
+                <button title='Settings' className="text-gray-300 hover:text-white">
                   <Settings className="h-5 w-5" />
                 </button>
               </div>
@@ -300,16 +299,20 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
             <div className="ml-4 flex items-center md:ml-6">
-              <button className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button title='Help' className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
                 <HelpCircle className="h-6 w-6" />
               </button>
 
               {/* Profile dropdown */}
               <div className="ml-3 relative">
                 <div>
-                  <button className="max-w-xs flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
-                    <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">
-                      A
+                  <button
+                    onClick={handleLogout}
+                    className="flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                    title="Logout"
+                  >
+                    <div className="h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold hover:bg-blue-600 transition-colors">
+                      <LogOut className="h-4 w-4" />
                     </div>
                   </button>
                 </div>

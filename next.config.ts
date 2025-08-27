@@ -24,7 +24,18 @@ const nextConfig: NextConfig = {
       "www.holidify.com",
       "www.fabhotels.com",
       "static.toiimg.com",
-      "cdn.pixabay.com"
+      "cdn.pixabay.com",
+      "img-s-msn-com.akamaized.net",
+      "res.cloudinary.com",
+      "images.prismic.io",
+      "cdn.sanity.io",
+      "avatars.mds.yandex.net",
+      "lh3.googleusercontent.com",
+      "platform-lookaside.fbsbx.com",
+      "scontent.xx.fbcdn.net",
+      "pbs.twimg.com",
+      "abs.twimg.com",
+      "www.atomic-energy.ru"
     ],
   },
 };

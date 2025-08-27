@@ -10,6 +10,7 @@ const quickLinks = [
   { label: "Blogs", href: "/blog" },
   { label: "Terms and Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
+  { label: "Admin Login", href: "/admin-login" },
 ];
 
 const tourTypes = [

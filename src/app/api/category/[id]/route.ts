@@ -10,9 +10,10 @@ interface ErrorWithStatus extends Error {
 }
 
 export const GET = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
-    const category = await Category.findById(params.id).lean();
+    const { id } = await params;
+    const category = await Category.findById(id).lean();
     if (!category) {
       const error = new Error("Category not found") as ErrorWithStatus;
       error.status = 404;
@@ -26,15 +27,16 @@ export const GET = asyncHandler(
 );
 
 export const PUT = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
+    const { id } = await params;
     const body: Partial<ICategory> = await request.json();
 
     // Check for duplicate category name if name is updated
     if (body.name) {
       const existingCategory = await Category.findOne({
         name: body.name,
-        _id: { $ne: params.id },
+        _id: { $ne: id },
       });
       if (existingCategory) {
         const error = new Error(
@@ -46,7 +48,7 @@ export const PUT = asyncHandler(
     }
 
     const category = await Category.findByIdAndUpdate(
-      params.id,
+      id,
       { $set: body },
       { new: true, runValidators: true }
     );
@@ -63,12 +65,13 @@ export const PUT = asyncHandler(
 );
 
 export const DELETE = asyncHandler(
-  async (request: Request, { params }: { params: { id: string } }) => {
+  async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
+    const { id } = await params;
 
     // Check if category is referenced by any adventures
     const adventureCount = await Adventure.countDocuments({
-      category: params.id,
+      category: id,
     });
     if (adventureCount > 0) {
       const error = new Error(
@@ -78,7 +81,7 @@ export const DELETE = asyncHandler(
       throw error;
     }
 
-    const category = await Category.findByIdAndDelete(params.id);
+    const category = await Category.findByIdAndDelete(id);
     if (!category) {
       const error = new Error("Category not found") as ErrorWithStatus;
       error.status = 404;

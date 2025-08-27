@@ -11,7 +11,8 @@ const connectDb = async () => {
 
     connection.on("error", (err) => {
       console.error("MongoDB connection error:", err);
-      process.exit(1);
+      // Remove process.exit(1) as it's not supported in Edge Runtime
+      // Instead, just log the error
     });
   } catch (error) {
     console.error("Database connection failed:", error);
