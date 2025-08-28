@@ -12,7 +12,7 @@ export function Card({ children, className, hover = false }: CardProps) {
     <div
       className={cn(
         // Reduce minimum width on very small screens so two cards can sit side by side
-        "bg-white/30 min-w-[160px] sm:min-w-[280px] rounded-3xl shadow-xl border border-gray-100 overflow-hidden",
+        "bg-white/30  rounded-3xl shadow-xl border border-gray-100 overflow-hidden",
         hover &&
           "transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]",
         className

@@ -4,6 +4,7 @@ import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { TravelCard } from "@/components/ui/Card";
+import { BookingModal } from "@/components/sections/BookingModal";
 import {
   Star,
   Quote,
@@ -20,6 +21,18 @@ import Image from "next/image";
 const TripLinkAdventures = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState("");
+
+  const handleBookNow = (destination: string) => {
+    setSelectedDestination(destination);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDestination("");
+  };
 
   const adventureCategories = [
     {
@@ -313,7 +326,7 @@ const TripLinkAdventures = () => {
               features={adventure.features}
               discount={adventure.discount}
               isPopular={adventure.isPopular}
-              onBookNow={() => console.log(`Booking ${adventure.destination}`)}
+              onBookNow={() => handleBookNow(adventure.destination)}
               className="transform transition-all duration-300 hover:scale-[1.02]"
             />
           ))}
@@ -376,6 +389,7 @@ const TripLinkAdventures = () => {
               <div className="flex justify-center mt-6 space-x-2">
                 {testimonials.map((_, index) => (
                   <button
+                  title="Select Testimonial"
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${
@@ -420,6 +434,13 @@ const TripLinkAdventures = () => {
           </div>
         </div>
       </Container>
+
+      {/* Booking Modal */}
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={handleCloseModal}
+        destination={selectedDestination}
+      />
     </section>
   );
 };

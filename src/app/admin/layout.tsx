@@ -14,6 +14,7 @@ import {
   Package,
   Video,
   LogOut,
+  Book,
 } from 'lucide-react';
 
 interface NavigationItem {
@@ -50,29 +51,35 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     },
   
     {
-      name: 'adventure',
+      name: 'Adventure',
       href: '/admin/adventure',
       icon: Users,
       current: pathname === '/admin/adventure'
     },
       {
-      name: 'category',
+      name: 'Category',
       href: '/admin/category',
       icon: Users,
       current: pathname === '/admin/category'
     },
     {
-      name: 'package',
+      name: 'Package',
       href: '/admin/pakage',
       icon: Package,
       current: pathname === '/admin/pakage'
     },
 
     {
-      name: 'blog',
+      name: 'Blog',
       href: '/admin/blog',
       icon: Video,
       current: pathname === '/admin/blog'
+    },
+     {
+      name: 'Bookings',
+      href: '/admin/bookings',
+      icon: Book,
+      current: pathname === '/admin/bookings'
     },
     
     

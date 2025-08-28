@@ -20,7 +20,6 @@ export function BookingModal({
   const [phone, setPhone] = useState("");
   const [travellers, setTravellers] = useState(1);
   const [message, setMessage] = useState("");
-  const [selectedDate] = useState<Date | null>(null);
   const [submitting, setSubmitting] = useState(false);
 
   useEffect(() => setMounted(true), []);
@@ -37,22 +36,47 @@ export function BookingModal({
     if (!submitting) onClose();
   }, [onClose, submitting]);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    setTimeout(() => {
-      console.log({
-        name,
-        email,
-        phone,
-        travellers,
-        message,
-        destination,
-        selectedDate,
+
+    try {
+      const response = await fetch("/api/booking", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          name,
+          email,
+          phone,
+          destination,
+          travellers,
+          message,
+        }),
       });
+
+      const data = await response.json();
+
+      if (data.success) {
+        // Reset form
+        setName("");
+        setEmail("");
+        setPhone("");
+        setTravellers(1);
+        setMessage("");
+        onClose();
+        // You could add a success toast notification here
+        alert("Booking submitted successfully! We'll contact you soon.");
+      } else {
+        throw new Error(data.message || "Failed to submit booking");
+      }
+    } catch (error) {
+      console.error("Booking submission error:", error);
+      alert("Failed to submit booking. Please try again.");
+    } finally {
       setSubmitting(false);
-      onClose();
-    }, 1200);
+    }
   };
 
   if (!mounted || !open) return null;
@@ -144,6 +168,7 @@ export function BookingModal({
                 min={1}
                 value={travellers}
                 onChange={(e) => setTravellers(parseInt(e.target.value) || 1)}
+                placeholder="Number of travellers"
                 className="w-full rounded-lg border border-yellow-300/70 px-3 py-2 text-sm focus:ring-2 focus:ring-yellow-500 focus:outline-none shadow-sm"
               />
             </div>
@@ -157,6 +182,7 @@ export function BookingModal({
             <input
               value={destination}
               readOnly
+              placeholder="Selected destination"
               className="w-full rounded-lg border border-yellow-300/70 bg-yellow-50/70 px-3 py-2 text-sm font-medium text-gray-700 shadow-sm"
             />
           </div>

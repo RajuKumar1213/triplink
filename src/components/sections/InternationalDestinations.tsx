@@ -5,6 +5,7 @@ import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TravelCard } from "@/components/ui/Card";
+import { BookingModal } from "@/components/sections/BookingModal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
 const internationalDestinations = [
@@ -116,6 +117,19 @@ export function InternationalDestinations() {
     currentIndex * 4 + 4
   );
 
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState("");
+
+  const handleBookNow = (destination: string) => {
+    setSelectedDestination(destination);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDestination("");
+  };
+
   return (
     <section className="py-10 ">
       <Container size="xl">
@@ -132,11 +146,13 @@ export function InternationalDestinations() {
           {/* Navigation */}
           <div className="flex gap-2">
             <button
+            title="Previous Slide"
               onClick={prevSlide}
               className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200">
               <ChevronLeft className="h-5 w-5 text-gray-600" />
             </button>
             <button
+            title="Next Slide"
               onClick={nextSlide}
               className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200">
               <ChevronRight className="h-5 w-5 text-gray-600" />
@@ -159,9 +175,7 @@ export function InternationalDestinations() {
               features={destination.features}
               discount={destination.discount}
               isPopular={destination.isPopular}
-              onBookNow={() =>
-                console.log(`Booking ${destination.destination}`)
-              }
+              onBookNow={() => handleBookNow(destination.destination)}
             />
           ))}
         </div>
@@ -176,6 +190,13 @@ export function InternationalDestinations() {
           </Button>
         </div>
       </Container>
+
+      {/* Booking Modal */}
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={handleCloseModal}
+        destination={selectedDestination}
+      />
     </section>
   );
 }

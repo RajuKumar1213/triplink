@@ -2,21 +2,26 @@ import mongoose from "mongoose";
 
 const connectDb = async () => {
   try {
-    await mongoose.connect(process.env.MONGODB_URI || "");
+    // Check if already connected
+    if (mongoose.connection.readyState >= 1) {
+      return;
+    }
 
-    const connection = mongoose.connection;
-    connection.on("connected", () => {
-      console.log("MongoDB connected successfully");
+    const mongoUri = process.env.MONGODB_URI;
+    if (!mongoUri) {
+      throw new Error("MONGODB_URI environment variable is not set");
+    }
+
+    // Connect with options for better error handling
+    await mongoose.connect(mongoUri, {
+      serverSelectionTimeoutMS: 5000, // Keep trying to send operations for 5 seconds
+      socketTimeoutMS: 45000, // Close sockets after 45 seconds of inactivity
     });
 
-    connection.on("error", (err) => {
-      console.error("MongoDB connection error:", err);
-      // Remove process.exit(1) as it's not supported in Edge Runtime
-      // Instead, just log the error
-    });
+    console.log("MongoDB connected successfully");
   } catch (error) {
     console.error("Database connection failed:", error);
-    throw new Error("Database connection failed");
+    throw new Error(`Database connection failed: ${error}`);
   }
 };
 

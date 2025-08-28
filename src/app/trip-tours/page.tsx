@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { TravelCard } from "@/components/ui/Card";
+import { BookingModal } from "@/components/sections/BookingModal";
 
 // Carousel images (trip visuals)
 const tourCarouselImages = [
@@ -62,6 +63,18 @@ const tripTours = [
 ];
 
 export default function TripToursPage() {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState("");
+
+  const handleBookNow = (destination: string) => {
+    setSelectedDestination(destination);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDestination("");
+  };
   return (
     <>
       <Header />
@@ -129,14 +142,19 @@ export default function TripToursPage() {
                 rating={t.rating}
                 reviews={t.reviews}
                 features={t.features}
-                onBookNow={() =>
-                  console.log("Book trip tour: " + t.destination)
-                }
+                onBookNow={() => handleBookNow(t.destination)}
               />
             ))}
           </div>
         </Container>
       </div>
+
+      {/* Booking Modal */}
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={handleCloseModal}
+        destination={selectedDestination}
+      />
 
       <Footer />
     </>

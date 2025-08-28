@@ -1,10 +1,11 @@
 "use client";
-import React from "react";
+import React, { useState } from "react";
 import Image from "next/image";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { TravelCard } from "@/components/ui/Card";
+import { BookingModal } from "@/components/sections/BookingModal";
 import { backgroundImage } from "@/constant";
 
 // Corporate visuals and program offerings
@@ -63,6 +64,19 @@ const corporatePrograms = [
 ];
 
 export default function CorporatePage() {
+  const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
+  const [selectedDestination, setSelectedDestination] = useState("");
+
+  const handleBookNow = (destination: string) => {
+    setSelectedDestination(destination);
+    setIsBookingModalOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setIsBookingModalOpen(false);
+    setSelectedDestination("");
+  };
+
   return (
     <>
       <Header />
@@ -127,9 +141,7 @@ export default function CorporatePage() {
                 rating={t.rating}
                 reviews={t.reviews}
                 features={t.features}
-                onBookNow={() =>
-                  console.log("Book corporate program: " + t.destination)
-                }
+                onBookNow={() => handleBookNow(t.destination)}
               />
             ))}
           </div>
@@ -137,6 +149,12 @@ export default function CorporatePage() {
       </div>
 
       <Footer />
+
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={handleCloseModal}
+        destination={selectedDestination}
+      />
     </>
   );
 }

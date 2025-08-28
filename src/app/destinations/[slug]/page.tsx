@@ -1,5 +1,3 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
-
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
@@ -15,8 +13,9 @@ export function generateStaticParams() {
 
 export const dynamicParams = false;
 
-export default async function DestinationPage({ params }: any) {
-  const data = await getDestinationBySlug(params?.slug as string);
+export default async function DestinationPage({ params }: { params: Promise<{ slug: string }> }) {
+  const { slug } = await params;
+  const data = await getDestinationBySlug(slug);
   if (!data) return notFound();
 
   const sectionNav = [

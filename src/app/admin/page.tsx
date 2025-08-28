@@ -116,7 +116,8 @@ const AdminDashboard = () => {
             published: blogs.filter((blog: any) => blog.isPublished).length,
             draft: blogs.filter((blog: any) => !blog.isPublished).length,
             recent: blogs.slice(0, 5)
-          }
+          },
+          
         });
       }
     } catch (error) {
