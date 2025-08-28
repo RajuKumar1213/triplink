@@ -1,8 +1,8 @@
 "use client";
 
-import React, { useState } from 'react';
-import Link from 'next/link';
-import { usePathname, useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import Link from "next/link";
+import { usePathname, useRouter } from "next/navigation";
 import {
   LayoutDashboard,
   Users,
@@ -15,7 +15,7 @@ import {
   Video,
   LogOut,
   Book,
-} from 'lucide-react';
+} from "lucide-react";
 
 interface NavigationItem {
   name: string;
@@ -33,58 +33,54 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
 
   const handleLogout = async () => {
     try {
-      await fetch('/api/auth/logout', {
-        method: 'POST',
+      await fetch("/api/auth/logout", {
+        method: "POST",
       });
-      router.push('/admin-login');
+      router.push("/admin-login");
     } catch (error) {
-      console.error('Logout failed:', error);
+      console.error("Logout failed:", error);
     }
   };
 
   const navigation: NavigationItem[] = [
     {
-      name: 'Dashboard',
-      href: '/admin',
+      name: "Dashboard",
+      href: "/admin",
       icon: LayoutDashboard,
-      current: pathname === '/admin'
-    },
-  
-    {
-      name: 'Adventure',
-      href: '/admin/adventure',
-      icon: Users,
-      current: pathname === '/admin/adventure'
-    },
-      {
-      name: 'Category',
-      href: '/admin/category',
-      icon: Users,
-      current: pathname === '/admin/category'
-    },
-    {
-      name: 'Package',
-      href: '/admin/pakage',
-      icon: Package,
-      current: pathname === '/admin/pakage'
+      current: pathname === "/admin",
     },
 
     {
-      name: 'Blog',
-      href: '/admin/blog',
+      name: "Adventure",
+      href: "/admin/adventure",
+      icon: Users,
+      current: pathname === "/admin/adventure",
+    },
+    {
+      name: "Category",
+      href: "/admin/category",
+      icon: Users,
+      current: pathname === "/admin/category",
+    },
+    {
+      name: "Package",
+      href: "/admin/pakage",
+      icon: Package,
+      current: pathname === "/admin/pakage",
+    },
+
+    {
+      name: "Blog",
+      href: "/admin/blog",
       icon: Video,
-      current: pathname === '/admin/blog'
+      current: pathname === "/admin/blog",
     },
-     {
-      name: 'Bookings',
-      href: '/admin/bookings',
+    {
+      name: "Bookings",
+      href: "/admin/bookings",
       icon: Book,
-      current: pathname === '/admin/bookings'
+      current: pathname === "/admin/bookings",
     },
-    
-    
-    
-    
   ];
 
   const toggleDropdown = (name: string) => {
@@ -96,10 +92,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   };
 
   return (
-    <div className="flex h-screen bg-gray-100">
+    <div className="flex h-screen bg-gray-100 ">
       {/* Sidebar for mobile */}
-      <div className={`fixed inset-0 z-50 md:hidden ${sidebarOpen ? 'block' : 'hidden'}`}>
-        <div className="fixed inset-0 bg-gray-600 bg-opacity-75" onClick={() => setSidebarOpen(false)}></div>
+      <div
+        className={`fixed inset-0 z-50 md:hidden ${sidebarOpen ? "block" : "hidden"}`}
+      >
+        <div
+          className="fixed inset-0 bg-gray-600 bg-opacity-75"
+          onClick={() => setSidebarOpen(false)}
+        ></div>
         <div className="relative flex flex-col w-64 h-full bg-gray-900">
           <div className="flex items-center justify-between h-16 px-4 bg-gray-800">
             <span className="text-white font-bold text-xl">TripLink Admin</span>
@@ -120,7 +121,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => toggleDropdown(item.name)}
                         className={`group flex items-center px-2 py-2 text-base font-medium rounded-md w-full justify-between ${
-                          item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                          item.current
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
                         }`}
                       >
                         <div className="flex items-center">
@@ -129,7 +132,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                         </div>
                         <ChevronDown
                           className={`h-4 w-4 transition-transform ${
-                            activeDropdown === item.name ? 'rotate-180' : ''
+                            activeDropdown === item.name ? "rotate-180" : ""
                           }`}
                         />
                       </button>
@@ -152,7 +155,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                     <Link
                       href={item.href}
                       className={`group flex items-center px-2 py-2 text-base font-medium rounded-md ${
-                        item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        item.current
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
                       }`}
                       onClick={() => setSidebarOpen(false)}
                     >
@@ -173,7 +178,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
               <div className="ml-3">
                 <p className="text-sm font-medium text-white">Admin User</p>
-                <p className="text-xs font-medium text-gray-300">admin@triplink.com</p>
+                <p className="text-xs font-medium text-gray-300">
+                  admin@triplink.com
+                </p>
               </div>
             </div>
           </div>
@@ -195,9 +202,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                       <button
                         onClick={() => toggleDropdown(item.name)}
                         className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md w-full justify-between ${
-                          item.current || (item.dropdown && item.dropdown.some(subItem => subItem.href === pathname))
-                            ? 'bg-gray-800 text-white'
-                            : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                          item.current ||
+                          (item.dropdown &&
+                            item.dropdown.some(
+                              (subItem) => subItem.href === pathname
+                            ))
+                            ? "bg-gray-800 text-white"
+                            : "text-gray-300 hover:bg-gray-700 hover:text-white"
                         }`}
                       >
                         <div className="flex items-center">
@@ -206,7 +217,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                         </div>
                         <ChevronDown
                           className={`h-4 w-4 transition-transform ${
-                            activeDropdown === item.name ? 'rotate-180' : ''
+                            activeDropdown === item.name ? "rotate-180" : ""
                           }`}
                         />
                       </button>
@@ -218,8 +229,8 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                               href={subItem.href}
                               className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
                                 pathname === subItem.href
-                                  ? 'bg-gray-800 text-white'
-                                  : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                                  ? "bg-gray-800 text-white"
+                                  : "text-gray-300 hover:bg-gray-700 hover:text-white"
                               }`}
                             >
                               {subItem.name}
@@ -232,7 +243,9 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
                     <Link
                       href={item.href}
                       className={`group flex items-center px-2 py-2 text-sm font-medium rounded-md ${
-                        item.current ? 'bg-gray-800 text-white' : 'text-gray-300 hover:bg-gray-700 hover:text-white'
+                        item.current
+                          ? "bg-gray-800 text-white"
+                          : "text-gray-300 hover:bg-gray-700 hover:text-white"
                       }`}
                     >
                       <item.icon className="mr-3 h-6 w-6" />
@@ -252,10 +265,15 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
               <div className="ml-3 flex-1">
                 <p className="text-sm font-medium text-white">Admin User</p>
-                <p className="text-xs font-medium text-gray-300">admin@triplink.com</p>
+                <p className="text-xs font-medium text-gray-300">
+                  admin@triplink.com
+                </p>
               </div>
               <div className="ml-auto">
-                <button title='Settings' className="text-gray-300 hover:text-white">
+                <button
+                  title="Settings"
+                  className="text-gray-300 hover:text-white"
+                >
                   <Settings className="h-5 w-5" />
                 </button>
               </div>
@@ -306,7 +324,10 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               </div>
             </div>
             <div className="ml-4 flex items-center md:ml-6">
-              <button title='Help' className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500">
+              <button
+                title="Help"
+                className="bg-white p-1 rounded-full text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              >
                 <HelpCircle className="h-6 w-6" />
               </button>
 
@@ -332,13 +353,13 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
           <div className="py-6">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {/* Page heading */}
-              <h1 className="text-2xl font-semibold text-gray-900">Dashboard</h1>
+              <h1 className="text-2xl font-semibold text-gray-900">
+                Dashboard
+              </h1>
             </div>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
               {/* Content area */}
-              <div className="py-4">
-                {children}
-              </div>
+              <div className="py-4">{children}</div>
             </div>
           </div>
         </main>
