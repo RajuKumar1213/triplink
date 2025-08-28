@@ -68,7 +68,7 @@ const TripLinkAdventures = () => {
     {
       id: "50+",
       label: "50+ Adventures",
-      icon: "",
+      icon: "👴",
       gradient: "from-amber-500 to-yellow-500",
     },
   ];
@@ -164,6 +164,51 @@ const TripLinkAdventures = () => {
       discount: 25,
       isPopular: false,
     },
+    {
+      id: 7,
+      destination: "SENIOR WELLNESS RETREAT",
+      duration: "3D | 2N",
+      image:
+        "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      category: "50+",
+      price: 7999,
+      originalPrice: 9999,
+      rating: 4.8,
+      reviews: 234,
+      features: ["Yoga Sessions", "Meditation", "Healthy Meals", "Spa"],
+      discount: 20,
+      isPopular: true,
+    },
+    {
+      id: 8,
+      destination: "CULTURAL HERITAGE TOUR",
+      duration: "4D | 3N",
+      image:
+        "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      category: "50+",
+      price: 6499,
+      originalPrice: 8499,
+      rating: 4.7,
+      reviews: 189,
+      features: ["Temple Visits", "Cultural Shows", "Local Cuisine", "Guided Tours"],
+      discount: 24,
+      isPopular: false,
+    },
+    {
+      id: 9,
+      destination: "SCENIC HILL STATION",
+      duration: "3D | 2N",
+      image:
+        "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
+      category: "50+",
+      price: 5499,
+      originalPrice: 6999,
+      rating: 4.6,
+      reviews: 156,
+      features: ["Cable Car", "Garden Tours", "Comfort Stay", "Photography"],
+      discount: 21,
+      isPopular: false,
+    },
   ];
 
   const testimonials = [
@@ -196,6 +241,16 @@ const TripLinkAdventures = () => {
       adventure: "Paragliding",
       avatar:
         "https://images.pexels.com/photos/1516680/pexels-photo-1516680.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2",
+    },
+    {
+      name: "Sunita Sharma",
+      location: "Pune",
+      review:
+        "At 62, I never thought I'd travel like this! The senior wellness retreat was perfect - comfortable pace, amazing food, and such caring staff. TripLink made me feel young again!",
+      rating: 5,
+      adventure: "Senior Wellness Retreat",
+      avatar:
+        "https://images.pexels.com/photos/733872/pexels-photo-733872.jpeg?auto=compress&cs=tinysrgb&w=150&h=150&dpr=2",
     },
   ];
 

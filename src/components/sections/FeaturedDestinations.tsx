@@ -121,7 +121,7 @@ export function FeaturedDestinations() {
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent"></div>
 
                 {/* Bookmark Icon */}
-                <button className="absolute top-6 right-6 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
+                <button title="Bookmark" className="absolute top-6 right-6 p-3 bg-white/20 backdrop-blur-sm rounded-full hover:bg-white/30 transition-colors">
                   <Heart className="h-5 w-5 text-white" />
                 </button>
 
@@ -228,7 +228,7 @@ export function FeaturedDestinations() {
                             </span>
                           </div>
                         </div>
-                        <button className="p-2 hover:bg-gray-100 rounded-full transition-colors">
+                        <button title="Heart" className="p-2 hover:bg-gray-100 rounded-full transition-colors">
                           <Heart className="h-5 w-5 text-gray-400" />
                         </button>
                       </div>
