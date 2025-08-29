@@ -3,6 +3,7 @@ import { HeroSection } from "@/components/sections/HeroSection";
 import { BookingForm } from "@/components/sections/BookingForm";
 import { InternationalDestinations } from "@/components/sections/InternationalDestinations";
 import { DomesticDestinations } from "@/components/sections/DomesticDestinations";
+import { BlogSection } from "@/components/sections/BlogSection";
 import { FAQSection } from "@/components/sections/FAQSection";
 import { Footer } from "@/components/sections/Footer";
 import TripLinkAdventures from "@/components/sections/TripLinkAdventures";
@@ -33,7 +34,9 @@ export default function Home() {
             <TripLinkAdventures />
           </div>
         </div>
+        
 
+        <BlogSection />
         <FAQSection />
       </main>
       <PopUpForm/>
