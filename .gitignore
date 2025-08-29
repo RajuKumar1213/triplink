@@ -39,3 +39,7 @@ yarn-error.log*
 # typescript
 *.tsbuildinfo
 next-env.d.ts
+
+# large video files
+public/3563086-uhd_3840_2160_25fps.mp4
+public/2169880-uhd_3840_2160_30fps.mp4

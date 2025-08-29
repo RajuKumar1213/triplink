@@ -238,6 +238,32 @@ const AdminCategoryPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
+<<<<<<< HEAD
+=======
+                Category
+              </label>
+              <select
+              title="Select Category"
+                value={formData.category}
+                onChange={(e) =>
+                  setFormData({ ...formData, category: e.target.value })
+                }
+                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
+                required
+              >
+                <option value="" disabled>
+                  Select a category
+                </option>
+                {categories.map((cat) => (
+                  <option key={String(cat._id)} value={String(cat._id)}>
+                    {cat.name}
+                  </option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">
+>>>>>>> ea594390fe29d7e10bade4e50b53cdaf9c7fe4e1
                 Category Name *
               </label>
               <input
