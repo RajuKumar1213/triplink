@@ -16,9 +16,9 @@ export function HeroSection() {
 
   const heroSlides: HeroSlide[] = useMemo(() => [
      {
-      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop",
+      video: "https://res.cloudinary.com/vikkyhub/video/upload/3563086-uhd_3840_2160_25fps_lbg4cq.mp4",
       bgColor: "#000000",
-      type: "image"
+      type: "video"
     },
     {
       image:
