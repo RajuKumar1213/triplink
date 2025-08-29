@@ -393,6 +393,7 @@ const AdminPackagePage = () => {
                       Category *
                     </label>
                     <select
+                      title="Select Category"
                       value={formData.category}
                       onChange={(e) =>
                         setFormData({ ...formData, category: e.target.value })

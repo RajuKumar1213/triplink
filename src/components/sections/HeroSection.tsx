@@ -32,6 +32,11 @@ export function HeroSection() {
       bgColor: "#0774b7",
       type: "image"
     },
+      {
+      video: "https://res.cloudinary.com/vikkyhub/video/upload/v1756460177/12286185_2160_3840_30fps_1_m1lt7c.mp4",
+      bgColor: "#000000",
+      type: "video"
+    },
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/5.svg",
       bgColor: "#135b98",
