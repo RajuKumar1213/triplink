@@ -31,5 +31,8 @@ export const POST = asyncHandler(async (request: Request) => {
 
   const category = new Category(body);
   await category.save();
-  return NextResponse.json({ success: true, data: category }, { status: 201 });
+  return NextResponse.json(
+    { success: true, data: { name: category.name, slug: category.slug } },
+    { status: 201 }
+  );
 });

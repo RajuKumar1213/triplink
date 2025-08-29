@@ -1,11 +1,7 @@
-import React from 'react'
+import React from "react";
 
 function page() {
-  return (
-    <div>
-      All destination. 
-    </div>
-  )
+  return <div>All destination.</div>;
 }
 
-export default page
+export default page;
