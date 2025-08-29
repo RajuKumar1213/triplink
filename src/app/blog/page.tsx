@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import Image from "next/image";
+import Link from "next/link";
 import { Header } from "@/components/sections/Header";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/sections/Footer";
@@ -23,69 +24,56 @@ const BlogPage = () => {
     {
       id: 1,
       title: "10 Hidden Gems in Bali That Even Celebrities Love",
-      excerpt:
-        "Discover the secluded spots in Bali where A-listers escape the paparazzi and find true peace.",
-      image:
-        "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      excerpt: "Discover the secluded spots in Bali where A-listers escape the paparazzi and find true peace.",
+      image: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
       category: "destinations",
-      date: "May 15, 2023",
-      readTime: "6 min read",
+      date: "August 25, 2025",
+      readTime: "5 min read",
     },
     {
       id: 2,
-      title: "Packing Like a Star: Celebrity Travel Essentials",
-      excerpt:
-        "Learn what your favorite celebrities never travel without and how to pack efficiently for luxury trips.",
-      image:
-        "https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=821&q=80",
-      category: "tips",
-      date: "April 28, 2023",
-      readTime: "8 min read",
+      title: "Ultimate Guide to Luxury Safari in Kenya",
+      excerpt: "Experience the wild in style with our comprehensive guide to Kenya's most exclusive safari experiences.",
+      image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      category: "luxury",
+      date: "August 22, 2025",
+      readTime: "7 min read",
     },
     {
       id: 3,
-      title: "The Most Exclusive Private Islands for Your Next Getaway",
-      excerpt:
-        "From Richard Branson's Necker Island to hidden Indonesian paradises, explore the world's most luxurious private islands.",
-      image:
-        "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "luxury",
-      date: "April 12, 2023",
-      readTime: "10 min read",
+      title: "Cultural Immersion: Beyond the Tourist Trail in Japan",
+      excerpt: "Step off the beaten path and discover authentic Japanese culture through local experiences.",
+      image: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      category: "culture",
+      date: "August 20, 2025",
+      readTime: "6 min read",
     },
     {
       id: 4,
-      title: "How to Experience Local Culture Like a True Traveler",
-      excerpt:
-        "Move beyond tourist traps and discover authentic cultural experiences that will transform your travels.",
-      image:
-        "https://images.unsplash.com/photo-1553659971-f01207815908?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "culture",
-      date: "March 30, 2023",
-      readTime: "7 min read",
+      title: "Packing Like a Pro: Celebrity Travel Secrets Revealed",
+      excerpt: "Learn the insider tips and tricks that celebrities use to pack efficiently for any trip.",
+      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      category: "tips",
+      date: "August 18, 2025",
+      readTime: "4 min read",
     },
     {
       id: 5,
       title: "The French Riviera's Best Kept Secrets",
-      excerpt:
-        "Explore the hidden corners of the Côte d'Azur that offer glamour without the crowds.",
-      image:
-        "https://images.unsplash.com/photo-1503918886996-8e5c6c0ad951?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      excerpt: "Explore the hidden corners of the Côte d'Azur that offer glamour without the crowds.",
+      image: "https://images.unsplash.com/photo-1503918886996-8e5c6c0ad951?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
       category: "destinations",
-      date: "March 18, 2023",
-      readTime: "9 min read",
+      date: "August 15, 2025",
+      readTime: "8 min read",
     },
     {
       id: 6,
-      title:
-        "Sustainable Luxury: Eco-Friendly Resorts That Don't Compromise on Comfort",
-      excerpt:
-        "Discover how luxury and sustainability can coexist at these breathtaking eco-resorts around the world.",
-      image:
-        "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
+      title: "Sustainable Luxury: Eco-Friendly Resorts That Don't Compromise on Comfort",
+      excerpt: "Discover how luxury and sustainability can coexist at these breathtaking eco-resorts around the world.",
+      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
       category: "luxury",
-      date: "February 25, 2023",
-      readTime: "11 min read",
+      date: "August 12, 2025",
+      readTime: "9 min read",
     },
   ];
 
@@ -161,11 +149,17 @@ const BlogPage = () => {
                 the moments in between. Discover how to travel deeper rather
                 than faster.
               </p>
-              <div className="flex items-center text-sm text-gray-500">
+              <div className="flex items-center text-sm text-gray-500 mb-6">
                 <span>June 2, 2023</span>
                 <span className="mx-2">•</span>
                 <span>12 min read</span>
               </div>
+              <Link
+                href="/blog/1"
+                className="inline-flex items-center px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full hover:bg-yellow-600 transition-colors shadow-lg"
+              >
+                Read Full Article →
+              </Link>
             </div>
           </div>
         </div>
@@ -199,10 +193,16 @@ const BlogPage = () => {
                 <p className="text-gray-600 mb-4 text-sm line-clamp-2">
                   {post.excerpt}
                 </p>
-                <div className="flex justify-between items-center text-xs text-gray-500">
+                <div className="flex justify-between items-center text-xs text-gray-500 mb-4">
                   <span>{post.date}</span>
                   <span>{post.readTime}</span>
                 </div>
+                <Link
+                  href={`/blog/${post.id}`}
+                  className="inline-flex items-center text-yellow-600 font-semibold hover:text-yellow-700 transition-colors"
+                >
+                  Read More →
+                </Link>
               </div>
             </article>
           ))}

@@ -1,5 +1,5 @@
 import { Container } from "@/components/ui/Container";
-import { Phone, Mail, MapPin, Youtube, Linkedin, Facebook } from "lucide-react";
+import { Phone, Mail, MapPin, Youtube, Linkedin, Facebook, Instagram } from "lucide-react";
 import Image from "next/image";
 
 const quickLinks = [
@@ -10,6 +10,7 @@ const quickLinks = [
   { label: "Blogs", href: "/blog" },
   { label: "Terms and Conditions", href: "/terms" },
   { label: "Privacy Policy", href: "/privacy" },
+  { label: "Refund Policy", href: "/refund-policy" },
   { label: "Admin Login", href: "/admin-login" },
 ];
 
@@ -128,22 +129,28 @@ export function Footer() {
                   </h5>
                   <div className="flex items-center gap-3">
                     <a
-                      href="#"
+                      href="https://www.youtube.com/@trip-link"
                       aria-label="YouTube"
                       className="group p-2 rounded-full bg-yellow-300/60 text-yellow-900 hover:bg-yellow-800 hover:text-yellow-50 transition-colors shadow-sm">
                       <Youtube className="h-4 w-4" />
                     </a>
                     <a
-                      href="#"
+                      href="https://www.linkedin.com/company/triplink-adventures/"
                       aria-label="LinkedIn"
                       className="group p-2 rounded-full bg-yellow-300/60 text-yellow-900 hover:bg-yellow-800 hover:text-yellow-50 transition-colors shadow-sm">
                       <Linkedin className="h-4 w-4" />
                     </a>
                     <a
-                      href="#"
+                      href="https://www.facebook.com/people/Triplink-Adventures/61573328632577/?mibextid=wwXIfr&rdid=T3hispVmuFxd9Zcs&share_url=https%3A%2F%2Fwww.facebook.com%2Fshare%2F16avXaLMS2%2F%3Fmibextid%3DwwXIfr"
                       aria-label="Facebook"
                       className="group p-2 rounded-full bg-yellow-300/60 text-yellow-900 hover:bg-yellow-800 hover:text-yellow-50 transition-colors shadow-sm">
                       <Facebook className="h-4 w-4" />
+                    </a>
+                    <a
+                      href="https://www.instagram.com/triplink_adventures?igsh=MW9weHN1ZjRycjA2Mg%3D%3D"
+                      aria-label="Instagram"
+                      className="group p-2 rounded-full bg-yellow-300/60 text-yellow-900 hover:bg-yellow-800 hover:text-yellow-50 transition-colors shadow-sm">
+                      <Instagram className="h-4 w-4" />
                     </a>
                   </div>
                 </div>
@@ -167,6 +174,11 @@ export function Footer() {
                   href="/privacy"
                   className="text-yellow-900/80 hover:text-black transition-colors">
                   Privacy Policy
+                </a>
+                <a
+                  href="/refund-policy"
+                  className="text-yellow-900/80 hover:text-black transition-colors">
+                  Refund Policy
                 </a>
               </div>
             </div>
