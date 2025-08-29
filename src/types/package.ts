@@ -33,6 +33,8 @@ export interface IPackage {
   altitude?: string;
   bestSeason?: string;
 
+  category?: string;
+
   overview: string[];
   highlights: string[];
   inclusions: string[];

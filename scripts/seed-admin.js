@@ -7,7 +7,9 @@ const seedAdmin = async () => {
     await connectDb();
 
     // Check if admin already exists
-    const existingAdmin = await Admin.findOne({ email: "admin@triplinkadventures.com" });
+    const existingAdmin = await Admin.findOne({
+      email: "admin@triplinkadventures.com",
+    });
 
     if (existingAdmin) {
       console.log("Admin user already exists");
@@ -29,7 +31,6 @@ const seedAdmin = async () => {
     console.log("Email: admin@triplinkadventures.com");
     console.log("Password: admin123");
     console.log("⚠️  Please change the password after first login!");
-
   } catch (error) {
     console.error("Error seeding admin:", error);
   } finally {

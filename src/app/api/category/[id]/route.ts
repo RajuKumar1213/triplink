@@ -13,7 +13,7 @@ export const GET = asyncHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
     const { id } = await params;
-    const category = await Category.findById(id).lean();
+    const category = await Category.findById(id, "name slug").lean();
     if (!category) {
       const error = new Error("Category not found") as ErrorWithStatus;
       error.status = 404;
@@ -30,12 +30,13 @@ export const PUT = asyncHandler(
   async (request: Request, { params }: { params: Promise<{ id: string }> }) => {
     await connectDb();
     const { id } = await params;
-    const body: Partial<ICategory> = await request.json();
+    const body = await request.json();
+    const { name } = body;
 
     // Check for duplicate category name if name is updated
-    if (body.name) {
+    if (name) {
       const existingCategory = await Category.findOne({
-        name: body.name,
+        name,
         _id: { $ne: id },
       });
       if (existingCategory) {
@@ -49,7 +50,7 @@ export const PUT = asyncHandler(
 
     const category = await Category.findByIdAndUpdate(
       id,
-      { $set: body },
+      { $set: { name } },
       { new: true, runValidators: true }
     );
     if (!category) {
@@ -58,7 +59,7 @@ export const PUT = asyncHandler(
       throw error;
     }
     return NextResponse.json(
-      { success: true, data: category },
+      { success: true, data: { name: category.name, slug: category.slug } },
       { status: 200 }
     );
   }
