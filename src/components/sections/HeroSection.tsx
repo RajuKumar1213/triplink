@@ -16,9 +16,9 @@ export function HeroSection() {
 
   const heroSlides: HeroSlide[] = useMemo(() => [
      {
-      video: "/3563086-uhd_3840_2160_25fps.mp4",
+      image: "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=1920&h=1080&fit=crop",
       bgColor: "#000000",
-      type: "video"
+      type: "image"
     },
     {
       image:
@@ -43,9 +43,9 @@ export function HeroSection() {
       type: "image"
     },
     {
-      video: "/2169880-uhd_3840_2160_30fps.mp4",
+      image: "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=1920&h=1080&fit=crop",
       bgColor: "#000000",
-      type: "video"
+      type: "image"
     },
   ], []);
 
