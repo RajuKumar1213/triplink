@@ -49,15 +49,42 @@ function PopUpForm() {
           </p>
 
           <form className="space-y-4">
+
+           { /*Name */}
+           <input
+              type="text"
+              title="Name"
+              placeholder="Your Name"
+              className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black placeholder-gray-600"
+            />
+            {/* Phone Number */}
+           <input
+              type="phone"
+              title="Phone Number"
+              placeholder="Enter your Number"
+              className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black placeholder-gray-600"
+            />
+
+            <input
+              type="text"
+              title=" your City  "
+              placeholder="Enter you City"
+              className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black placeholder-gray-600"
+            />
+
+
+
             {/* Destination */}
             <input
               type="text"
+              title="Enter your dream destination"
               placeholder="Dream Destination"
               className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black placeholder-gray-600"
             />
 
             {/* Travel Date */}
             <input
+              title="Select travel date"
               type="date"
               className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black"
             />
@@ -65,6 +92,7 @@ function PopUpForm() {
             {/* Email */}
             <input
               type="email"
+              title="Enter your email"
               placeholder="Your Email"
               className="w-full rounded-xl px-4 py-3 bg-white/90 border border-yellow-700 shadow-md focus:outline-none focus:ring-2 focus:ring-yellow-600 text-black placeholder-gray-600"
             />
@@ -72,6 +100,7 @@ function PopUpForm() {
             {/* CTA Button */}
             <button
               type="submit"
+              title=""
               className="w-full mt-4 bg-black text-yellow-400 rounded-xl py-3 font-bold text-lg hover:bg-yellow-600 hover:text-black transition transform hover:scale-105 shadow-lg">
               Get Deals 🚀
             </button>
