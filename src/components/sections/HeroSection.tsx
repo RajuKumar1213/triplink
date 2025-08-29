@@ -1,35 +1,64 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
-// NOTE: This hero previously had overlapping issues because the fill Image's parent
-// did not have position: relative and an explicit height, causing the section to collapse.
-// We wrap the slider in a fixed-height relative container now.
+
+interface HeroSlide {
+  image?: string;
+  video?: string;
+  bgColor: string;
+  type: "image" | "video";
+}
 
 export function HeroSection() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
-  const heroSlides = [
+  const heroSlides: HeroSlide[] = useMemo(() => [
+     {
+      video: "/3563086-uhd_3840_2160_25fps.mp4",
+      bgColor: "#000000",
+      type: "video"
+    },
     {
       image:
         "https://www.thomascook.in/images/campaign-pages/2025/april/genric-holiday-1920x545.jpg",
       bgColor: "#122126",
+      type: "image"
     },
 
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/3.svg",
       bgColor: "#0774b7",
+      type: "image"
     },
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/5.svg",
       bgColor: "#135b98",
+      type: "image"
     },
     {
       image: "https://triplinkadventures.com/wp-content/uploads/2025/07/4.svg",
       bgColor: "#84bdc7",
+      type: "image"
     },
-  ];
+    {
+      video: "/2169880-uhd_3840_2160_30fps.mp4",
+      bgColor: "#000000",
+      type: "video"
+    },
+  ], []);
+
+  // Auto-play functionality with different timing for videos and images
+  useEffect(() => {
+    const interval = heroSlides[currentSlide].type === "video" ? 23000 : 5000; // 60s for videos, 5s for images
+
+    const timer = setInterval(() => {
+      setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
+    }, interval);
+
+    return () => clearInterval(timer);
+  }, [currentSlide, heroSlides]);
 
   const nextSlide = () => {
     setCurrentSlide((prev) => (prev + 1) % heroSlides.length);
@@ -44,17 +73,31 @@ export function HeroSection() {
   return (
     <section className="relative w-full my-4">
       <div
-        className={`h-[120px] sm:h-[380px] md:h-[400px] lg:h-[358px] overflow-hidden transition-colors duration-700`}
+        className={`h-[120px] sm:h-[380px] md:h-[400px] lg:h-[358px] overflow-hidden transition-colors duration-700 relative`}
         style={{ backgroundColor: heroSlides[currentSlide].bgColor }}>
-        {/* Current Slide Image */}
-        <Image
-          key={heroSlides[currentSlide].image}
-          src={heroSlides[currentSlide].image}
-          alt="Featured travel inspiration"
-          fill
-          priority
-          className="object-contain select-none "
-        />
+        {/* Current Slide Content */}
+        {heroSlides[currentSlide].type === "video" ? (
+          <video
+            key={heroSlides[currentSlide].video}
+            src={heroSlides[currentSlide].video}
+            autoPlay
+            muted
+            playsInline
+            loop={false}
+            preload="metadata"
+            className="w-full h-full object-cover select-none"
+            onError={(e) => console.error('Video failed to load:', e)}
+          />
+        ) : (
+          <Image
+            key={heroSlides[currentSlide].image}
+            src={heroSlides[currentSlide].image!}
+            alt="Featured travel inspiration"
+            fill
+            priority
+            className="object-contain select-none"
+          />
+        )}
 
         {/* Controls */}
         <button
