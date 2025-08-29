@@ -169,6 +169,11 @@ export function Footer() {
                   className="text-yellow-900/80 hover:text-black transition-colors">
                   Privacy Policy
                 </a>
+                <a
+                  href="/refund-policy"
+                  className="text-yellow-900/80 hover:text-black transition-colors">
+                  Refund Policy
+                </a>
               </div>
             </div>
           </div>
