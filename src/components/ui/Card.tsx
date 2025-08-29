@@ -1,5 +1,6 @@
 import { cn } from "@/lib/utils";
 import Image from "next/image";
+import Link from "next/link";
 
 interface CardProps {
   children: React.ReactNode;
@@ -16,7 +17,8 @@ export function Card({ children, className, hover = false }: CardProps) {
         hover &&
           "transition-all duration-500 hover:shadow-2xl hover:-translate-y-2 hover:scale-[1.02]",
         className
-      )}>
+      )}
+    >
       {children}
     </div>
   );
@@ -62,6 +64,7 @@ export function CardContent({ children, className }: CardContentProps) {
 
 interface TravelCardProps {
   destination: string;
+  slug?: string;
   duration: string;
   image: string;
   price: number;
@@ -77,6 +80,7 @@ interface TravelCardProps {
 
 export function TravelCard({
   destination,
+  slug,
   duration,
   image,
   price,
@@ -84,8 +88,6 @@ export function TravelCard({
   rating = 4.8,
   reviews = 324,
   features = [],
-  // discount,
-  // isPopular = false,
   onBookNow,
   className,
 }: TravelCardProps) {
@@ -96,7 +98,8 @@ export function TravelCard({
         // Full width in grid on small screens; constrain at larger breakpoints
         "group w-full sm:max-w-sm sm:mx-auto",
         className
-      )}>
+      )}
+    >
       {/* Image Section */}
       <div className="relative">
         <CardImage src={image} alt={destination} className="h-56 sm:h-72" />
@@ -128,7 +131,8 @@ export function TravelCard({
               {features.slice(0, 3).map((feature, index) => (
                 <span
                   key={index}
-                  className="px-2 py-1 bg-yellow-50 text-gray-700 text-xs rounded-lg font-medium">
+                  className="px-2 py-1 bg-yellow-50 text-gray-700 text-xs rounded-lg font-medium"
+                >
                   {feature}
                 </span>
               ))}
@@ -141,11 +145,11 @@ export function TravelCard({
           <div className="flex items-center justify-between mb-2">
             <div className="flex items-baseline space-x-2">
               <span className="text-lg sm:text-2xl font-bold text-gray-900">
-                ₹{price.toLocaleString('en-IN')}
+                ₹{price.toLocaleString("en-IN")}
               </span>
               {originalPrice && (
                 <span className="text-sm sm:text-lg text-gray-500 line-through">
-                  ₹{originalPrice.toLocaleString('en-IN')}
+                  ₹{originalPrice.toLocaleString("en-IN")}
                 </span>
               )}
             </div>
@@ -156,11 +160,11 @@ export function TravelCard({
         </div>
 
         {/* Action Button */}
-        <button
-          onClick={onBookNow}
-          className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-600 hover:to-yellow-800 text-white font-bold py-2.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg group-hover:shadow-xl">
-          BOOK NOW
-        </button>
+        <Link href={`destinations/${slug}`}>
+          <button className="w-full bg-gradient-to-r from-yellow-600 to-yellow-400 hover:from-yellow-600 hover:to-yellow-800 text-white font-bold py-2.5 sm:py-4 px-4 sm:px-6 rounded-2xl text-sm sm:text-base transition-all duration-300 transform hover:scale-[1.02] hover:shadow-lg group-hover:shadow-xl">
+            BOOK NOW
+          </button>
+        </Link>
       </CardContent>
     </Card>
   );

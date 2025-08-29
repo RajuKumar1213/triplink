@@ -2,21 +2,40 @@ import { NextResponse } from "next/server";
 import { asyncHandler } from "@/lib/asyncHandler";
 import connectDb from "@/db/connectDb";
 import Package from "@/models/Package";
-import { IPackage } from "@/types/package";
+import { IPackageRequest } from "@/types/package";
 
 interface ErrorWithStatus extends Error {
   status?: number;
 }
 
-export const GET = asyncHandler(async () => {
+export const GET = asyncHandler(async (request: Request) => {
   await connectDb();
-  const packages = await Package.find().lean();
+  const { searchParams } = new URL(request.url);
+  const slug = searchParams.get("slug");
+  const excludeId = searchParams.get("excludeId");
+
+  // If slug is provided, check for slug existence (for validation)
+  if (slug) {
+    const query: any = { slug };
+    if (excludeId) {
+      query._id = { $ne: excludeId };
+    }
+
+    const existingPackage = await Package.findOne(query);
+    return NextResponse.json(
+      { success: true, exists: !!existingPackage },
+      { status: 200 }
+    );
+  }
+
+  // If no slug provided, return all packages
+  const packages = await Package.find({}).sort({ createdAt: -1 });
   return NextResponse.json({ success: true, data: packages }, { status: 200 });
 });
 
 export const POST = asyncHandler(async (request: Request) => {
   await connectDb();
-  const body: IPackage = await request.json();
+  const body: IPackageRequest = await request.json();
 
   // Check for duplicate slug
   const existingPackage = await Package.findOne({ slug: body.slug });

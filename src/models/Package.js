@@ -51,18 +51,8 @@ const packageSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-// Generate slug from name before saving
-packageSchema.pre("save", function (next) {
-  if (this.isModified("name") || !this.slug) {
-    this.slug = this.name
-      .toLowerCase()
-      .replace(/[^a-z0-9]+/g, "-")
-      .replace(/(^-|-$)+/g, "")
-      .replace(/--+/g, "-")
-      .substring(0, 60);
-  }
-  next();
-});
+// Note: Slug generation is now handled on the frontend to ensure uniqueness
+// before saving to the database
 
 const Package =
   mongoose.models.Package || mongoose.model("Package", packageSchema);

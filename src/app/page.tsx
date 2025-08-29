@@ -34,12 +34,11 @@ export default function Home() {
             <TripLinkAdventures />
           </div>
         </div>
-        
 
         <BlogSection />
         <FAQSection />
       </main>
-      <PopUpForm/>
+      <PopUpForm />
       <Footer />
     </div>
   );

@@ -1,22 +1,114 @@
 import { notFound } from "next/navigation";
 import Image from "next/image";
 import { Container } from "@/components/ui/Container";
-import { getDestinationBySlug, destinations } from "@/lib/destinations";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { BookingActions } from "@/components/sections/BookingActions";
 import { backgroundImage } from "@/constant";
 
-export function generateStaticParams() {
-  return destinations.map((d) => ({ slug: d.slug }));
+// Type definitions for the package data
+interface ItineraryDay {
+  day: number;
+  title: string;
+  description: string;
+  activities: string[];
+  _id: string;
 }
 
-export const dynamicParams = false;
+interface PricingTier {
+  label: string;
+  price: number;
+  originalPrice?: number;
+  includes: string[];
+  notes?: string;
+  _id: string;
+}
 
-export default async function DestinationPage({ params }: { params: Promise<{ slug: string }> }) {
+interface FAQ {
+  question: string;
+  answer: string;
+  _id: string;
+}
+
+interface PackageData {
+  _id: string;
+  slug: string;
+  name: string;
+  region: string;
+  shortTagline: string;
+  heroImage: string;
+  gallery: string[];
+  duration: string;
+  difficulty: string;
+  altitude: string;
+  bestSeason: string;
+  category: string;
+  overview: string[];
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+  itinerary: ItineraryDay[];
+  pricing: PricingTier[];
+  faqs: FAQ[];
+  bookingNote?: string;
+  trending: boolean;
+  icon?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+// Static params for known destinations - you can add more as needed
+export function generateStaticParams() {
+  return [
+    { slug: "annapurna-circuit-trek" },
+    { slug: "chopta-tungnath-uttarakhand" },
+    { slug: "himachal-bir-rajgundha-jibhi-kasol-kalga" },
+    { slug: "kashmir-paradise" },
+  ];
+}
+
+export const dynamicParams = true; // Allow dynamic params for new packages
+
+// Fetch package data from API
+async function getPackageData(slug: string): Promise<PackageData | null> {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/pakage/${slug}`,
+      {
+        cache: "force-cache", // Enable caching for static generation
+        next: { revalidate: 3600 }, // Revalidate every hour
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const result = await response.json();
+
+    if (result.success && result.data) {
+      return result.data as PackageData;
+    }
+
+    return null;
+  } catch (error) {
+    console.error("Error fetching package data:", error);
+    return null;
+  }
+}
+
+export default async function DestinationPage({
+  params,
+}: {
+  params: Promise<{ slug: string }>;
+}) {
   const { slug } = await params;
-  const data = await getDestinationBySlug(slug);
+  const data = await getPackageData(slug);
+
   if (!data) return notFound();
+
+  // Type assertion since we've already checked for null
+  const packageData: PackageData = data;
 
   const sectionNav = [
     { id: "overview", label: "Overview" },
@@ -34,19 +126,24 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
         <section className="relative">
           {(() => {
             const heroImages = (
-              data.gallery.length > 0 ? data.gallery : [data.heroImage]
-            ).filter((v, i, a) => !!v && a.indexOf(v) === i);
+              packageData.gallery.length > 0
+                ? packageData.gallery
+                : [packageData.heroImage]
+            ).filter(
+              (v: string, i: number, a: string[]) => !!v && a.indexOf(v) === i
+            );
             return (
               <div className="relative w-full">
                 <div className="relative py-6 md:py-4">
                   <div className="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 md:gap-6  [&::-webkit-scrollbar]:hidden">
-                    {heroImages.map((src, i) => (
+                    {heroImages.map((src: string, i: number) => (
                       <div
                         key={src + i}
-                        className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 rounded-none overflow-hidden bg-gray-100 shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50">
+                        className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 rounded-none overflow-hidden bg-gray-100 shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50"
+                      >
                         <Image
                           src={src}
-                          alt={`${data.name} image ${i + 1}`}
+                          alt={`${packageData.name} image ${i + 1}`}
                           fill
                           priority={i === 0}
                           className="object-cover"
@@ -67,39 +164,42 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                         Signature Journey
                       </p>
                       <h1 className="text-3xl md:text-4xl font-black leading-tight mb-4 text-gray-900 tracking-tight">
-                        {data.name}
+                        {packageData.name}
                       </h1>
                       <p className="text-[13px] md:text-[15px] text-gray-700 leading-relaxed font-medium max-w-2xl">
-                        {data.shortTagline}
+                        {packageData.shortTagline}
                       </p>
                     </div>
                     <div className="flex flex-wrap gap-2 md:gap-3 text-[10px] md:text-xs">
-                      {data.duration && (
+                      {packageData.duration && (
                         <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium shadow-sm">
-                          ⏱ {data.duration}
+                          ⏱ {packageData.duration}
                         </span>
                       )}
-                      {data.altitude && (
+                      {packageData.altitude && (
                         <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium shadow-sm">
-                          ⬆ {data.altitude}
+                          ⬆ {packageData.altitude}
                         </span>
                       )}
-                      {data.bestSeason && (
+                      {packageData.bestSeason && (
                         <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium shadow-sm">
-                          ☀ {data.bestSeason}
+                          ☀ {packageData.bestSeason}
                         </span>
                       )}
-                      {data.difficulty && (
+                      {packageData.difficulty && (
                         <span className="px-3 py-1 rounded-full bg-yellow-100 text-yellow-800 font-medium shadow-sm">
-                          ⚡ {data.difficulty}
+                          ⚡ {packageData.difficulty}
                         </span>
                       )}
                       <span className="px-3 py-1 rounded-full bg-yellow-50 text-yellow-700 font-medium border border-yellow-200/70">
-                        {data.region}
+                        {packageData.region}
                       </span>
                     </div>
                   </div>
-                  <BookingActions destination={data.name} className="mt-4" />
+                  <BookingActions
+                    destination={packageData.name}
+                    className="mt-4"
+                  />
                 </Container>
               </div>
             );
@@ -114,7 +214,8 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                 <a
                   key={s.id}
                   href={`#${s.id}`}
-                  className="text-gray-700 hover:text-black text-xs md:text-sm font-semibold relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-yellow-500 hover:after:w-full after:transition-all">
+                  className="text-gray-700 hover:text-black text-xs md:text-sm font-semibold relative after:absolute after:left-0 after:-bottom-1 after:h-0.5 after:w-0 after:bg-yellow-500 hover:after:w-full after:transition-all"
+                >
                   {s.label}
                 </a>
               ))}
@@ -148,10 +249,11 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                   </h2>
                 </header>
                 <div className="space-y-5 text-gray-700 text-sm md:text-[15px] leading-relaxed">
-                  {data.overview.map((p, i) => (
+                  {packageData.overview.map((p: string, i: number) => (
                     <p
                       key={i}
-                      className="relative pl-4 before:absolute before:left-0 before:top-2 before:h-2 before:w-2 before:rounded-full before:bg-yellow-300 font-medium text-gray-800">
+                      className="relative pl-4 before:absolute before:left-0 before:top-2 before:h-2 before:w-2 before:rounded-full before:bg-yellow-300 font-medium text-gray-800"
+                    >
                       {p}
                     </p>
                   ))}
@@ -159,16 +261,17 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
               </section>
 
               {/* Highlights */}
-              {data.highlights.length > 0 && (
+              {packageData.highlights.length > 0 && (
                 <section id="highlights" className="scroll-mt-28">
                   <h2 className="text-2xl md:text-3xl font-extrabold mb-6">
                     Trip Highlights
                   </h2>
                   <ul className="grid sm:grid-cols-2 gap-4">
-                    {data.highlights.map((h) => (
+                    {packageData.highlights.map((h: string) => (
                       <li
                         key={h}
-                        className="group relative rounded-xl border border-yellow-200 bg-white/70 backdrop-blur-sm px-4 py-3 flex gap-3 items-start shadow-sm hover:shadow-md transition">
+                        className="group relative rounded-xl border border-yellow-200 bg-white/70 backdrop-blur-sm px-4 py-3 flex gap-3 items-start shadow-sm hover:shadow-md transition"
+                      >
                         <span className="mt-1 h-3 w-3 rounded-full bg-yellow-400 ring-2 ring-yellow-200" />
                         <span className="text-gray-800 text-sm md:text-[15px] font-medium">
                           {h}
@@ -181,21 +284,22 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
               )}
 
               {/* Itinerary */}
-              {data.itinerary.length > 0 && (
+              {packageData.itinerary.length > 0 && (
                 <section id="itinerary" className="scroll-mt-28">
                   <div className="flex items-center justify-between mb-6">
                     <h2 className="text-2xl md:text-3xl font-extrabold">
                       Detailed Itinerary
                     </h2>
                     <span className="text-xs font-medium text-yellow-700 bg-yellow-200/60 px-3 py-1 rounded-full">
-                      {data.itinerary.length} Days
+                      {packageData.itinerary.length} Days
                     </span>
                   </div>
                   <div className="space-y-6">
-                    {data.itinerary.map((day) => (
+                    {packageData.itinerary.map((day: ItineraryDay) => (
                       <div
                         key={day.day}
-                        className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-yellow-200 shadow-sm hover:shadow-md transition">
+                        className="relative overflow-hidden rounded-2xl bg-white/80 backdrop-blur-sm border border-yellow-200 shadow-sm hover:shadow-md transition"
+                      >
                         <div className="absolute -left-6 -top-6 w-24 h-24 bg-gradient-to-br from-yellow-300/40 to-yellow-500/40 rotate-45" />
                         <div className="relative p-5 md:p-6">
                           <span className="inline-flex items-center text-[11px] font-semibold uppercase tracking-wide bg-yellow-500 text-white px-3 py-1 rounded-full shadow">
@@ -209,7 +313,7 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                           </p>
                           {day.activities && day.activities.length > 0 && (
                             <ul className="mt-3 grid sm:grid-cols-2 gap-2 text-xs md:text-sm text-gray-600">
-                              {day.activities.map((a) => (
+                              {day.activities.map((a: string) => (
                                 <li key={a} className="flex gap-2">
                                   <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-500" />
                                   {a}
@@ -225,16 +329,17 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
               )}
 
               {/* FAQs */}
-              {data.faqs.length > 0 && (
+              {packageData.faqs.length > 0 && (
                 <section id="faqs" className="scroll-mt-28">
                   <h2 className="text-2xl md:text-3xl font-extrabold mb-6">
                     FAQs
                   </h2>
                   <div className="space-y-4">
-                    {data.faqs.map((f, i) => (
+                    {packageData.faqs.map((f: FAQ, i: number) => (
                       <details
                         key={i}
-                        className="group rounded-xl bg-white/80 backdrop-blur-sm border border-yellow-200 p-4 shadow-sm">
+                        className="group rounded-xl bg-white/80 backdrop-blur-sm border border-yellow-200 p-4 shadow-sm"
+                      >
                         <summary className="cursor-pointer font-semibold text-sm md:text-base text-gray-800 flex items-center justify-between">
                           {f.question}
                           <span className="text-yellow-600 group-open:rotate-180 transition-transform">
@@ -249,39 +354,16 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                   </div>
                 </section>
               )}
-
-              {/* CTA Banner */}
-              <section className="rounded-3xl relative overflow-hidden bg-gradient-to-r from-yellow-500 to-yellow-400 p-8 md:p-12 text-white shadow-xl">
-                <div className="absolute inset-0 opacity-25 bg-[radial-gradient(circle_at_30%_30%,white,transparent_60%)]" />
-                <div className="relative max-w-2xl">
-                  <h2 className="text-2xl md:text-3xl font-extrabold mb-3 drop-shadow">
-                    Ready to Experience {data.name.split(" ")[0]}?
-                  </h2>
-                  <p className="text-sm md:text-base font-medium mb-6 text-yellow-50/90">
-                    Limited seats. Secure your spot with a quick advance & start
-                    packing the thrill.
-                  </p>
-                  <div className="flex flex-wrap gap-4">
-                    <BookingActions
-                      destination={data.name}
-                      mode="single"
-                      singleLabel="Book Now"
-                    />
-                    <button className="px-6 py-3 rounded-xl bg-white/20 hover:bg-white/30 backdrop-blur-sm text-white font-semibold text-sm md:text-base transition">
-                      Download PDF
-                    </button>
-                  </div>
-                </div>
-              </section>
             </div>
 
             {/* SIDEBAR */}
             <aside className="space-y-8 lg:sticky lg:top-28 self-start">
               {/* Pricing */}
-              {data.pricing.length > 0 && (
+              {packageData.pricing.length > 0 && (
                 <section
                   id="pricing"
-                  className="scroll-mt-28 rounded-2xl border border-yellow-300/70 bg-gradient-to-br from-yellow-100/80 to-yellow-50/80 backdrop-blur-sm p-6 shadow-sm">
+                  className="scroll-mt-28 rounded-2xl border border-yellow-300/70 bg-gradient-to-br from-yellow-100/80 to-yellow-50/80 backdrop-blur-sm p-6 shadow-sm"
+                >
                   <h3 className="text-lg font-extrabold mb-5 flex items-center gap-2">
                     Pricing Options{" "}
                     <span className="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-yellow-300/60 text-yellow-900">
@@ -289,10 +371,11 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                     </span>
                   </h3>
                   <ul className="space-y-5">
-                    {data.pricing.map((tier) => (
+                    {packageData.pricing.map((tier: PricingTier) => (
                       <li
                         key={tier.label}
-                        className="relative p-4 rounded-xl bg-white/90 border border-yellow-200 shadow-sm hover:shadow-md transition flex flex-col gap-2">
+                        className="relative p-4 rounded-xl bg-white/90 border border-yellow-200 shadow-sm hover:shadow-md transition flex flex-col gap-2"
+                      >
                         <div className="flex items-start justify-between">
                           <span className="font-semibold text-sm md:text-base text-gray-800">
                             {tier.label}
@@ -314,7 +397,7 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                         )}
                         {tier.includes && tier.includes.length > 0 && (
                           <ul className="mt-1 text-[11px] md:text-xs text-gray-600 space-y-1 list-disc list-inside">
-                            {tier.includes.map((i) => (
+                            {tier.includes.map((i: string) => (
                               <li key={i}>{i}</li>
                             ))}
                           </ul>
@@ -322,17 +405,18 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                       </li>
                     ))}
                   </ul>
-                  {data.bookingNote && (
+                  {packageData.bookingNote && (
                     <p className="mt-5 text-xs md:text-sm text-yellow-800 font-medium bg-yellow-200/70 px-3 py-2 rounded-lg">
-                      {data.bookingNote}
+                      {packageData.bookingNote}
                     </p>
                   )}
                   <div className="mt-6">
                     <BookingActions
-                      destination={data.name}
+                      destination={packageData.name}
                       mode="single"
                       singleLabel="Book Now"
                       buttonClassName="w-full rounded-xl bg-yellow-500 hover:bg-yellow-600 text-white font-semibold py-3 text-sm md:text-base shadow-lg shadow-yellow-600/30 transition"
+                      showPaymentOption={true}
                     />
                   </div>
                 </section>
@@ -340,13 +424,13 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
 
               {/* Inclusions & Exclusions */}
               <section id="inclusions" className="scroll-mt-28 space-y-6">
-                {data.inclusions.length > 0 && (
+                {packageData.inclusions.length > 0 && (
                   <div className="rounded-2xl border border-yellow-200 bg-white/90 backdrop-blur-sm p-5 shadow-sm">
                     <h4 className="text-sm md:text-base font-bold mb-3">
                       Inclusions
                     </h4>
                     <ul className="space-y-2 text-xs md:text-sm text-gray-600">
-                      {data.inclusions.map((i) => (
+                      {packageData.inclusions.map((i: string) => (
                         <li key={i} className="flex gap-2">
                           <span className="mt-1 h-1.5 w-1.5 rounded-full bg-yellow-500" />{" "}
                           {i}
@@ -355,13 +439,13 @@ export default async function DestinationPage({ params }: { params: Promise<{ sl
                     </ul>
                   </div>
                 )}
-                {data.exclusions.length > 0 && (
+                {packageData.exclusions.length > 0 && (
                   <div className="rounded-2xl border border-yellow-200 bg-white/90 backdrop-blur-sm p-5 shadow-sm">
                     <h4 className="text-sm md:text-base font-bold mb-3">
                       Exclusions
                     </h4>
                     <ul className="space-y-2 text-xs md:text-sm text-gray-600">
-                      {data.exclusions.map((i) => (
+                      {packageData.exclusions.map((i: string) => (
                         <li key={i} className="flex gap-2">
                           <span className="mt-1 h-1.5 w-1.5 rounded-full bg-gray-400" />{" "}
                           {i}

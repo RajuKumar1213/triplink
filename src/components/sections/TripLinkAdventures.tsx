@@ -18,11 +18,36 @@ import {
 } from "lucide-react";
 import Image from "next/image";
 
+interface Category {
+  _id: string;
+  name: string;
+  slug: string;
+}
+
+interface Adventure {
+  id: string;
+  slug: string;
+  destination: string;
+  duration: string;
+  image: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  reviews: number;
+  features: string[];
+  discount: number;
+  isPopular: boolean;
+}
+
 const TripLinkAdventures = () => {
   const [activeCategory, setActiveCategory] = useState("all");
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState("");
+  const [categories, setCategories] = useState<Category[]>([]);
+  const [adventures, setAdventures] = useState<Adventure[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [loadingAdventures, setLoadingAdventures] = useState(false);
 
   const handleBookNow = (destination: string) => {
     setSelectedDestination(destination);
@@ -34,182 +59,101 @@ const TripLinkAdventures = () => {
     setSelectedDestination("");
   };
 
+  // Fetch categories on component mount
+  useEffect(() => {
+    const fetchCategories = async () => {
+      try {
+        const response = await fetch("/api/category");
+        const result = await response.json();
+        if (result.success) {
+          setCategories(result.data);
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCategories();
+  }, []);
+
+  console.log(categories);
+
+  // Fetch adventures based on category
+  const fetchAdventures = async (categorySlug: string) => {
+    setLoadingAdventures(true);
+    try {
+      const url =
+        categorySlug === "all"
+          ? "/api/package-card"
+          : `/api/package-card?category=${categorySlug}`;
+
+      const response = await fetch(url);
+      const result = await response.json();
+      if (result.success) {
+        setAdventures(result.data);
+      }
+    } catch (error) {
+      console.error("Error fetching adventures:", error);
+      setAdventures([]);
+    } finally {
+      setLoadingAdventures(false);
+    }
+  };
+
+  // Handle category change
+  const handleCategoryChange = (categorySlug: string) => {
+    setActiveCategory(categorySlug);
+    fetchAdventures(categorySlug);
+  };
+
+  // Fetch all adventures on initial load
+  useEffect(() => {
+    if (!loading) {
+      fetchAdventures("all");
+    }
+  }, [loading]);
+
+  // Create adventure categories with icons and gradients
   const adventureCategories = [
     {
       id: "all",
       label: "All Adventures",
-      icon: "🌟",
       gradient: "from-purple-500 to-pink-500",
     },
-    {
-      id: "extreme",
-      label: "Extreme Sports",
-      icon: "🪂",
-      gradient: "from-red-500 to-orange-500",
-    },
-    {
-      id: "nature",
-      label: "Nature Trails",
-      icon: "🏔️",
-      gradient: "from-green-500 to-teal-500",
-    },
-    {
-      id: "water",
-      label: "Water Sports",
-      icon: "🌊",
-      gradient: "from-blue-500 to-cyan-500",
-    },
-    {
-      id: "cultural",
-      label: "Cultural Tours",
-      icon: "🏛️",
-      gradient: "from-amber-500 to-yellow-500",
-    },
-    {
-      id: "50+",
-      label: "50+ Adventures",
-      icon: "👴",
-      gradient: "from-amber-500 to-yellow-500",
-    },
+    ...categories.map((category) => ({
+      id: category.slug,
+      label: category.name,
+    })),
   ];
 
-  const adventures = [
-    {
-      id: 1,
-      destination: "EXTREME BUNGEE",
-      duration: "1 Day",
-      image:
-        "https://images.pexels.com/photos/163185/base-jumping-parachute-jump-parachuting-163185.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "extreme",
-      price: 3999,
-      originalPrice: 4999,
-      rating: 4.9,
-      reviews: 1247,
-      features: ["140m Jump", "Safety Gear", "Certificate"],
-      discount: 20,
-      isPopular: true,
-    },
-    {
-      id: 2,
-      destination: "STARLIGHT CAMPING",
-      duration: "2D | 1N",
-      image:
-        "https://images.pexels.com/photos/699558/pexels-photo-699558.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "nature",
-      price: 2499,
-      originalPrice: 3199,
-      rating: 4.8,
-      reviews: 892,
-      features: ["Bonfire", "Star Gazing", "Local Food"],
-      discount: 22,
-      isPopular: false,
-    },
-    {
-      id: 3,
-      destination: "SKY PARAGLIDING",
-      duration: "Half Day",
-      image:
-        "https://images.pexels.com/photos/848618/pexels-photo-848618.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "extreme",
-      price: 4999,
-      originalPrice: 6499,
-      rating: 4.9,
-      reviews: 1567,
-      features: ["Tandem Flight", "Photography", "Training"],
-      discount: 23,
-      isPopular: true,
-    },
-    {
-      id: 4,
-      destination: "RIVER RAFTING",
-      duration: "4 Hours",
-      image:
-        "https://images.pexels.com/photos/6979001/pexels-photo-6979001.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "water",
-      price: 1899,
-      originalPrice: 2399,
-      rating: 4.7,
-      reviews: 2341,
-      features: ["Grade 3-4", "Safety Kit", "Lunch"],
-      discount: 21,
-      isPopular: false,
-    },
-    {
-      id: 5,
-      destination: "MOUNTAIN BIKING",
-      duration: "6D | 7N",
-      image:
-        "https://images.pexels.com/photos/100582/pexels-photo-100582.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "nature",
-      price: 15999,
-      originalPrice: 19999,
-      rating: 4.8,
-      reviews: 743,
-      features: ["High Altitude", "Support Car", "Stay"],
-      discount: 20,
-      isPopular: false,
-    },
-    {
-      id: 6,
-      destination: "HERITAGE WALK",
-      duration: "4D | 5N",
-      image:
-        "https://images.pexels.com/photos/3581368/pexels-photo-3581368.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "cultural",
-      price: 8999,
-      originalPrice: 11999,
-      rating: 4.6,
-      reviews: 1089,
-      features: ["Expert Guide", "Palace Tours", "Shows"],
-      discount: 25,
-      isPopular: false,
-    },
-    {
-      id: 7,
-      destination: "SENIOR WELLNESS RETREAT",
-      duration: "3D | 2N",
-      image:
-        "https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "50+",
-      price: 7999,
-      originalPrice: 9999,
-      rating: 4.8,
-      reviews: 234,
-      features: ["Yoga Sessions", "Meditation", "Healthy Meals", "Spa"],
-      discount: 20,
-      isPopular: true,
-    },
-    {
-      id: 8,
-      destination: "CULTURAL HERITAGE TOUR",
-      duration: "4D | 3N",
-      image:
-        "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "50+",
-      price: 6499,
-      originalPrice: 8499,
-      rating: 4.7,
-      reviews: 189,
-      features: ["Temple Visits", "Cultural Shows", "Local Cuisine", "Guided Tours"],
-      discount: 24,
-      isPopular: false,
-    },
-    {
-      id: 9,
-      destination: "SCENIC HILL STATION",
-      duration: "3D | 2N",
-      image:
-        "https://images.pexels.com/photos/1181263/pexels-photo-1181263.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-      category: "50+",
-      price: 5499,
-      originalPrice: 6999,
-      rating: 4.6,
-      reviews: 156,
-      features: ["Cable Car", "Garden Tours", "Comfort Stay", "Photography"],
-      discount: 21,
-      isPopular: false,
-    },
-  ];
+  // Helper functions for icons and gradients
+  // function getCategoryIcon(slug: string): string {
+  //   const iconMap: { [key: string]: string } = {
+  //     extreme: "🪂",
+  //     nature: "🏔️",
+  //     water: "🌊",
+  //     cultural: "🏛️",
+  //     "50+": "👴",
+  //     "domestic-destinations": "🏠",
+  //     "international-destinations": "✈️",
+  //   };
+  //   return iconMap[slug] || "�";
+  // }
+
+  // function getCategoryGradient(slug: string): string {
+  //   const gradientMap: { [key: string]: string } = {
+  //     extreme: "from-red-500 to-orange-500",
+  //     nature: "from-green-500 to-teal-500",
+  //     water: "from-blue-500 to-cyan-500",
+  //     cultural: "from-amber-500 to-yellow-500",
+  //     "50+": "from-amber-500 to-yellow-500",
+  //     "domestic-destinations": "from-indigo-500 to-purple-500",
+  //     "international-destinations": "from-emerald-500 to-teal-500",
+  //   };
+  //   return gradientMap[slug] || "from-purple-500 to-pink-500";
+  // }
 
   const testimonials = [
     {
@@ -276,10 +220,7 @@ const TripLinkAdventures = () => {
     { icon: Clock, value: "24/7", label: "Support", color: "text-purple-600" },
   ];
 
-  const filteredAdventures =
-    activeCategory === "all"
-      ? adventures
-      : adventures.filter((adventure) => adventure.category === activeCategory);
+  const filteredAdventures = adventures;
 
   // Auto-rotate testimonials
   useEffect(() => {
@@ -350,41 +291,81 @@ const TripLinkAdventures = () => {
 
         {/* Category Filter */}
         <div className="flex flex-wrap justify-center gap-3 mb-10">
-          {adventureCategories.map((category) => (
-            <button
-              key={category.id}
-              onClick={() => setActiveCategory(category.id)}
-              className={`group px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 ${
-                activeCategory === category.id
-                  ? "bg-yellow-500 text-white shadow-lg scale-105"
-                  : "bg-white text-gray-700 hover:bg-yellow-50 border border-gray-200 hover:border-yellow-500 shadow-md"
-              }`}
-            >
-              <span className="text-lg mr-2">{category.icon}</span>
-              {category.label}
-            </button>
-          ))}
+          {loading
+            ? // Loading skeleton for categories
+              Array.from({ length: 6 }).map((_, index) => (
+                <div
+                  key={index}
+                  className="px-4 py-2 rounded-xl bg-gray-200 animate-pulse"
+                >
+                  <span className="text-lg mr-2">🌟</span>
+                  <span className="text-sm">Loading...</span>
+                </div>
+              ))
+            : adventureCategories.map((category) => (
+                <button
+                  key={category.id}
+                  onClick={() => handleCategoryChange(category.id)}
+                  className={`group px-4 py-2 rounded-xl font-medium text-sm transition-all duration-300 transform hover:scale-105 ${
+                    activeCategory === category.id
+                      ? "bg-yellow-500 text-white shadow-lg scale-105"
+                      : "bg-white text-gray-700 hover:bg-yellow-50 border border-gray-200 hover:border-yellow-500 shadow-md"
+                  }`}
+                >
+                  {category.label}
+                </button>
+              ))}
         </div>
 
         {/* Adventures Grid with TravelCard */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3 sm:gap-4 mb-10">
-          {filteredAdventures.map((adventure) => (
-            <TravelCard
-              key={adventure.id}
-              destination={adventure.destination}
-              duration={adventure.duration}
-              image={adventure.image}
-              price={adventure.price}
-              originalPrice={adventure.originalPrice}
-              rating={adventure.rating}
-              reviews={adventure.reviews}
-              features={adventure.features}
-              discount={adventure.discount}
-              isPopular={adventure.isPopular}
-              onBookNow={() => handleBookNow(adventure.destination)}
-              className="transform transition-all duration-300 hover:scale-[1.02]"
-            />
-          ))}
+          {loadingAdventures ? (
+            // Loading skeleton for adventures
+            Array.from({ length: 8 }).map((_, index) => (
+              <div
+                key={index}
+                className="bg-white rounded-2xl shadow-lg overflow-hidden animate-pulse"
+              >
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-4 space-y-3">
+                  <div className="h-4 bg-gray-200 rounded"></div>
+                  <div className="h-3 bg-gray-200 rounded w-3/4"></div>
+                  <div className="h-6 bg-gray-200 rounded w-1/2"></div>
+                </div>
+              </div>
+            ))
+          ) : filteredAdventures.length > 0 ? (
+            filteredAdventures.map((adventure) => (
+              <TravelCard
+                key={adventure.id}
+                slug={adventure.slug}
+                destination={adventure.destination}
+                duration={adventure.duration}
+                image={adventure.image}
+                price={adventure.price}
+                originalPrice={adventure.originalPrice}
+                rating={adventure.rating}
+                reviews={adventure.reviews}
+                features={adventure.features}
+                discount={adventure.discount}
+                isPopular={adventure.isPopular}
+                onBookNow={() => handleBookNow(adventure.destination)}
+                className="transform transition-all duration-300 hover:scale-[1.02]"
+              />
+            ))
+          ) : (
+            <div className="col-span-full text-center py-12">
+              <div className="text-gray-500 text-lg">
+                No adventures found for this category.
+              </div>
+              <button
+                onClick={() => handleCategoryChange("all")}
+                className="mt-4 px-6 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition-colors"
+              >
+                View All Adventures
+              </button>
+            </div>
+          )}
         </div>
 
         {/* Enhanced Testimonials */}
@@ -444,7 +425,7 @@ const TripLinkAdventures = () => {
               <div className="flex justify-center mt-6 space-x-2">
                 {testimonials.map((_, index) => (
                   <button
-                  title="Select Testimonial"
+                    title="Select Testimonial"
                     key={index}
                     onClick={() => setCurrentTestimonial(index)}
                     className={`w-2 h-2 rounded-full transition-all duration-300 ${

@@ -1,10 +1,8 @@
 "use client";
 
 import React, { useState, useEffect, FormEvent } from "react";
-import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { Card } from "@/components/ui/Card";
-import ImageUpload from "@/components/ui/ImageUpload";
 import { ICategory } from "@/types/category";
 import { Plus, Edit, Trash2, Search, ImageIcon } from "lucide-react";
 
@@ -18,9 +16,7 @@ const AdminCategoryPage = () => {
   );
   const [formData, setFormData] = useState({
     name: "",
-    image: "",
-    description: "",
-    category: "",
+    slug: "",
   });
 
   useEffect(() => {
@@ -44,16 +40,75 @@ const AdminCategoryPage = () => {
   const resetForm = () => {
     setFormData({
       name: "",
-      image: "",
-      description: "",
-      category: "",
+      slug: "",
     });
+    setEditingCategory(null);
   };
 
-  const filteredCategories = categories.filter(
-    (category) =>
-      category.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      category.description?.toLowerCase().includes(searchTerm.toLowerCase())
+  // Function to generate unique slug from category name
+  const generateUniqueSlug = async (
+    name: string,
+    excludeId?: string
+  ): Promise<string> => {
+    const baseSlug = name
+      .toLowerCase()
+      .trim()
+      .replace(/[^\w\s-]/g, "") // Remove special characters
+      .replace(/[\s_-]+/g, "-") // Replace spaces, underscores, and multiple hyphens with single hyphen
+      .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
+    if (!baseSlug) return "";
+
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+      try {
+        // Check if slug exists in database
+        const response = await fetch(
+          `/api/category/check-slug?slug=${slug}${excludeId ? `&excludeId=${excludeId}` : ""}`
+        );
+        const data = await response.json();
+
+        if (!data.exists) {
+          return slug;
+        }
+
+        // If slug exists, try with counter
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      } catch (error) {
+        console.error("Error checking slug:", error);
+        // If API call fails, fall back to local check
+        const localExists = categories.some(
+          (cat) => cat.slug === slug && cat._id?.toString() !== excludeId
+        );
+        if (!localExists) {
+          return slug;
+        }
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
+  };
+
+  // Auto-generate slug when category name changes (only for new categories)
+  useEffect(() => {
+    if (!editingCategory && formData.name.trim()) {
+      const generateSlugForForm = async () => {
+        try {
+          const generatedSlug = await generateUniqueSlug(formData.name);
+          setFormData((prev) => ({ ...prev, slug: generatedSlug }));
+        } catch (error) {
+          console.error("Error generating slug:", error);
+        }
+      };
+      generateSlugForForm();
+    }
+  }, [formData.name, editingCategory]);
+
+  const filteredCategories = categories.filter((category) =>
+    category.name.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   if (loading) {
@@ -63,15 +118,86 @@ const AdminCategoryPage = () => {
   }
 
   function handleSubmit(event: FormEvent<HTMLFormElement>): void {
-    throw new Error("Function not implemented.");
-  }
+    event.preventDefault();
 
-  function handleDelete(arg0: string): void {
-    throw new Error("Function not implemented.");
+    if (!formData.name.trim()) {
+      alert("Category name is required");
+      return;
+    }
+
+    const submitData = async () => {
+      try {
+        // Generate unique slug if not editing
+        const slug = editingCategory
+          ? formData.slug
+          : await generateUniqueSlug(formData.name);
+
+        const dataToSend = {
+          ...formData,
+          slug,
+        };
+
+        const url = editingCategory
+          ? `/api/category/${editingCategory._id}`
+          : "/api/category";
+        const method = editingCategory ? "PUT" : "POST";
+
+        const response = await fetch(url, {
+          method,
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(dataToSend),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          fetchCategories();
+          setShowForm(false);
+          resetForm();
+        } else {
+          alert(data.error || "Error saving category");
+        }
+      } catch (error) {
+        console.error("Error saving category:", error);
+        alert("Error saving category");
+      }
+    };
+
+    submitData();
+  }
+  function handleDelete(id: string): void {
+    if (confirm("Are you sure you want to delete this category?")) {
+      const deleteData = async () => {
+        try {
+          const response = await fetch(`/api/category/${id}`, {
+            method: "DELETE",
+          });
+
+          if (response.ok) {
+            fetchCategories();
+          } else {
+            const data = await response.json();
+            alert(data.error || "Error deleting category");
+          }
+        } catch (error) {
+          console.error("Error deleting category:", error);
+          alert("Error deleting category");
+        }
+      };
+
+      deleteData();
+    }
   }
 
   function handleEdit(category: ICategory): void {
-    throw new Error("Function not implemented.");
+    setEditingCategory(category);
+    setFormData({
+      name: category.name,
+      slug: category.slug,
+    });
+    setShowForm(true);
   }
 
   return (
@@ -112,28 +238,6 @@ const AdminCategoryPage = () => {
           <form onSubmit={handleSubmit} className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Category
-              </label>
-              <select
-                value={formData.category}
-                onChange={(e) =>
-                  setFormData({ ...formData, category: e.target.value })
-                }
-                className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                required
-              >
-                <option value="" disabled>
-                  Select a category
-                </option>
-                {categories.map((cat) => (
-                  <option key={String(cat._id)} value={String(cat._id)}>
-                    {cat.name}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">
                 Category Name *
               </label>
               <input
@@ -152,27 +256,22 @@ const AdminCategoryPage = () => {
             </div>
 
             <div>
-              <ImageUpload
-                label="Category Image"
-                value={formData.image}
-                onChange={(url) => setFormData({ ...formData, image: url })}
-                folder="categories"
-              />
-            </div>
-
-            <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">
-                Description
+                Slug (Auto-generated from name)
               </label>
-              <textarea
-                value={formData.description}
+              <input
+                type="text"
+                value={formData.slug}
                 onChange={(e) =>
-                  setFormData({ ...formData, description: e.target.value })
+                  setFormData({ ...formData, slug: e.target.value })
                 }
-                rows={4}
                 className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
-                placeholder="Enter category description (optional)"
+                placeholder="category-slug"
+                readOnly={!editingCategory} // Only editable when editing existing category
               />
+              <p className="text-xs text-gray-500 mt-1">
+                URL-friendly version of the category name
+              </p>
             </div>
 
             <div className="flex gap-4">
@@ -197,17 +296,14 @@ const AdminCategoryPage = () => {
 
       {/* Categories Table */}
       <div className="overflow-x-auto">
-        <table className="min-w-[700px] w-full border border-gray-200 rounded-lg">
+        <table className="min-w-[500px] w-full border border-gray-200 rounded-lg">
           <thead className="bg-gray-50">
             <tr>
-              <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
-                Image
-              </th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
                 Name
               </th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
-                Description
+                Slug
               </th>
               <th className="px-4 py-2 text-left text-xs font-semibold text-gray-500">
                 Created
@@ -220,28 +316,11 @@ const AdminCategoryPage = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {filteredCategories.map((category) => (
               <tr key={String(category._id)} className="hover:bg-gray-50">
-                <td className="px-4 py-2">
-                  {category.image ? (
-                    <Image
-                      src={category.image}
-                      alt={category.name}
-                      width={60}
-                      height={60}
-                      className="rounded object-cover"
-                    />
-                  ) : (
-                    <ImageIcon className="h-8 w-8 text-gray-400" />
-                  )}
-                </td>
                 <td className="px-4 py-2 font-semibold text-gray-900">
                   {category.name}
                 </td>
                 <td className="px-4 py-2 text-gray-600 text-sm">
-                  {category.description ? (
-                    category.description
-                  ) : (
-                    <span className="text-gray-400">—</span>
-                  )}
+                  {category.slug}
                 </td>
                 <td className="px-4 py-2 text-xs text-gray-500">
                   {new Date(category.createdAt || "").toLocaleDateString()}

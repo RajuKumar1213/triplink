@@ -61,8 +61,15 @@ const AdminPackagePage = () => {
   // Auto-generate slug when package name changes (only for new packages)
   useEffect(() => {
     if (!editingPackage && formData.name.trim()) {
-      const generatedSlug = generateSlug(formData.name);
-      setFormData((prev) => ({ ...prev, slug: generatedSlug }));
+      const generateSlugForForm = async () => {
+        try {
+          const generatedSlug = await generateUniqueSlug(formData.name);
+          setFormData((prev) => ({ ...prev, slug: generatedSlug }));
+        } catch (error) {
+          console.error("Error generating slug:", error);
+        }
+      };
+      generateSlugForForm();
     }
   }, [formData.name, editingPackage]);
 
@@ -92,21 +99,67 @@ const AdminPackagePage = () => {
     }
   };
 
-  // Function to generate slug from package name
-  const generateSlug = (name: string): string => {
-    return name
+  // Function to generate unique slug from package name
+  const generateUniqueSlug = async (
+    name: string,
+    excludeId?: string
+  ): Promise<string> => {
+    const baseSlug = name
       .toLowerCase()
       .trim()
       .replace(/[^\w\s-]/g, "") // Remove special characters
       .replace(/[\s_-]+/g, "-") // Replace spaces, underscores, and multiple hyphens with single hyphen
       .replace(/^-+|-+$/g, ""); // Remove leading/trailing hyphens
+
+    if (!baseSlug) return "";
+
+    let slug = baseSlug;
+    let counter = 1;
+
+    while (true) {
+      try {
+        // Check if slug exists in database
+        const response = await fetch(
+          `/api/pakage/check-slug?slug=${slug}${excludeId ? `&excludeId=${excludeId}` : ""}`
+        );
+        const data = await response.json();
+
+        if (!data.exists) {
+          return slug;
+        }
+
+        // If slug exists, try with counter
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      } catch (error) {
+        console.error("Error checking slug:", error);
+        // If API call fails, fall back to local check
+        const localExists = packages.some(
+          (pkg) => pkg.slug === slug && pkg._id?.toString() !== excludeId
+        );
+        if (!localExists) {
+          return slug;
+        }
+        slug = `${baseSlug}-${counter}`;
+        counter++;
+      }
+    }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    // Basic validation
+    if (!formData.name.trim()) {
+      alert("Package name is required");
+      return;
+    }
+
     try {
-      // Generate slug from package name if not editing
-      const slug = editingPackage ? formData.slug : generateSlug(formData.name);
+      // Generate unique slug from package name if not editing
+      const slug = editingPackage
+        ? formData.slug
+        : await generateUniqueSlug(formData.name);
 
       const data = {
         ...formData,
@@ -127,10 +180,19 @@ const AdminPackagePage = () => {
           .split("\n")
           .map((item) => item.trim())
           .filter((item) => item),
+        itinerary: formData.itinerary.filter(
+          (item) => item.title.trim() && item.description.trim()
+        ),
+        pricing: formData.pricing.filter(
+          (item) => item.label.trim() && item.price > 0
+        ),
+        faqs: formData.faqs.filter(
+          (item) => item.question.trim() && item.answer.trim()
+        ),
       };
 
       const url = editingPackage
-        ? `/api/pakage/${editingPackage._id}`
+        ? `/api/pakage/${editingPackage.slug}`
         : "/api/pakage";
       const method = editingPackage ? "PUT" : "POST";
 
@@ -154,7 +216,7 @@ const AdminPackagePage = () => {
       }
     } catch (error) {
       console.error("Error saving package:", error);
-      alert(alert);
+      alert("Error saving package");
     }
   };
 
@@ -186,10 +248,10 @@ const AdminPackagePage = () => {
     setShowForm(true);
   };
 
-  const handleDelete = async (id: string) => {
+  const handleDelete = async (slug: string) => {
     if (confirm("Are you sure you want to delete this package?")) {
       try {
-        const response = await fetch(`/api/pakage/${id}`, {
+        const response = await fetch(`/api/pakage/${slug}`, {
           method: "DELETE",
         });
         if (response.ok) {
@@ -390,22 +452,21 @@ const AdminPackagePage = () => {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div>
                     <label className="block text-sm font-medium text-gray-700 mb-1">
-                      Category *
+                      Category
                     </label>
                     <select
                       value={formData.category}
                       onChange={(e) =>
                         setFormData({ ...formData, category: e.target.value })
                       }
-                      required
                       className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-400 focus:border-transparent"
                     >
                       <option value="" disabled>
                         Select a category
                       </option>
                       {categories.map((cat) => (
-                        <option key={cat.slug} value={cat.slug}>
-                          {cat.name}
+                        <option key={cat.slug} value={cat.name}>
+                          {cat.slug}
                         </option>
                       ))}
                     </select>
@@ -481,7 +542,6 @@ const AdminPackagePage = () => {
                         setFormData({ ...formData, heroImage: url })
                       }
                       label="Hero Image"
-                      required
                     />
                   </div>
                   <div>
@@ -491,7 +551,6 @@ const AdminPackagePage = () => {
                         setFormData({ ...formData, icon: url })
                       }
                       label="Icon"
-                      required
                     />
                   </div>
                 </div>
@@ -907,7 +966,7 @@ const AdminPackagePage = () => {
                   disabled={loading}
                   className="px-6 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 disabled:bg-gray-400 disabled:cursor-not-allowed transition-colors"
                 >
-                  {loading ? "Creating..." : "Create Package"}
+                  {editingPackage ? "Update Package" : "Create Package"}
                 </button>
               ) : (
                 <button
@@ -1018,7 +1077,7 @@ const AdminPackagePage = () => {
                 {pkg.pricing && pkg.pricing.length > 0 && (
                   <div className="mt-2 text-sm text-gray-900">
                     <span className="font-medium">
-                      ${Math.min(...pkg.pricing.map((p) => p.price))} - $
+                      ₹{Math.min(...pkg.pricing.map((p) => p.price))} - ₹
                       {Math.max(...pkg.pricing.map((p) => p.price))}
                     </span>
                     <span className="text-gray-500 ml-1">
@@ -1042,7 +1101,7 @@ const AdminPackagePage = () => {
                   <Button
                     size="sm"
                     variant="outline"
-                    onClick={() => handleDelete(pkg._id?.toString() || "")}
+                    onClick={() => handleDelete(pkg.slug)}
                     className="flex-1 text-red-600 hover:text-red-900"
                   >
                     <Trash2 className="h-4 w-4 mr-1" />
@@ -1126,7 +1185,7 @@ const AdminPackagePage = () => {
                       )}
                       {pkg.pricing && pkg.pricing.length > 0 && (
                         <div className="text-sm font-medium text-gray-900">
-                          ${Math.min(...pkg.pricing.map((p) => p.price))} - $
+                          ₹{Math.min(...pkg.pricing.map((p) => p.price))} - ₹
                           {Math.max(...pkg.pricing.map((p) => p.price))}
                         </div>
                       )}
@@ -1170,7 +1229,7 @@ const AdminPackagePage = () => {
                       <Button
                         size="sm"
                         variant="outline"
-                        onClick={() => handleDelete(pkg._id?.toString() || "")}
+                        onClick={() => handleDelete(pkg.slug)}
                         className="text-red-600 hover:text-red-900 p-1"
                       >
                         <Trash2 className="h-4 w-4" />

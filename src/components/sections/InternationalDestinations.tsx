@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Container } from "@/components/ui/Container";
 import { Button } from "@/components/ui/Button";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -8,111 +8,65 @@ import { TravelCard } from "@/components/ui/Card";
 import { BookingModal } from "@/components/sections/BookingModal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 
-const internationalDestinations = [
-  {
-    id: 1,
-    destination: "LUXURY BALI",
-    duration: "6N | 7D",
-    image:
-      "https://images.pexels.com/photos/1586205/pexels-photo-1586205.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    price: 89990,
-    originalPrice: 119990,
-    rating: 4.8,
-    reviews: 2847,
-    features: ["Beach Resort", "All Inclusive", "Spa & Wellness"],
-    discount: 25,
-    isPopular: true,
-  },
-  {
-    id: 2,
-    destination: "MAGICAL TURKEY",
-    duration: "7N | 8D",
-    image:
-      "https://triplinkadventures.com/wp-content/uploads/2025/06/turkey-hot-air-ballooning-over-uchisar-village-cappadocia.jpg",
-    price: 124990,
-    originalPrice: 149990,
-    rating: 4.9,
-    reviews: 1924,
-    features: ["Hot Air Balloon", "Cappadocia", "Historic Sites"],
-    discount: 17,
-    isPopular: false,
-  },
-  {
-    id: 3,
-    destination: "EXOTIC THAILAND",
-    duration: "5N | 6D",
-    image:
-      "https://images.pexels.com/photos/844167/pexels-photo-844167.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    price: 69990,
-    originalPrice: 89990,
-    rating: 4.7,
-    reviews: 3521,
-    features: ["Bangkok", "Phuket", "Island Hopping"],
-    discount: 22,
-    isPopular: false,
-  },
-  {
-    id: 4,
-    destination: "AMAZING JAPAN",
-    duration: "8N | 9D",
-    image:
-      "https://images.pexels.com/photos/2902939/pexels-photo-2902939.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    price: 189990,
-    originalPrice: 229990,
-    rating: 4.9,
-    reviews: 1647,
-    features: ["Tokyo", "Kyoto", "Mount Fuji"],
-    discount: 17,
-    isPopular: false,
-  },
-  {
-    id: 5,
-    destination: "SCENIC ALMÁTY",
-    duration: "6N | 7D",
-    image:
-      "https://images.pexels.com/photos/734102/pexels-photo-734102.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    price: 149990,
-    originalPrice: 179990,
-    rating: 4.6,
-    reviews: 892,
-    features: ["Mountains", "Lake Tours", "Adventure"],
-    discount: 17,
-    isPopular: false,
-  },
-  {
-    id: 6,
-    destination: "PARADISE MALDIVES",
-    duration: "4N | 5D",
-    image:
-      "https://images.pexels.com/photos/1287460/pexels-photo-1287460.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
-    price: 299990,
-    originalPrice: 399990,
-    rating: 4.9,
-    reviews: 2156,
-    features: ["Water Villa", "Private Beach", "Luxury Resort"],
-    discount: 25,
-    isPopular: true,
-  },
-];
+interface Destination {
+  id: string;
+  slug: string;
+  destination: string;
+  duration: string;
+  image: string;
+  price: number;
+  originalPrice: number;
+  rating: number;
+  reviews: number;
+  features: string[];
+  discount: number;
+  isPopular: boolean;
+}
 
 export function InternationalDestinations() {
+  const [destinations, setDestinations] = useState<Destination[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
   const [currentIndex, setCurrentIndex] = useState(0);
 
+  useEffect(() => {
+    const fetchDestinations = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch(
+          "/api/package-card?category=international-destinations"
+        );
+        const result = await response.json();
+
+        if (result.success) {
+          setDestinations(result.data);
+        } else {
+          setError("Failed to fetch destinations");
+        }
+      } catch (err) {
+        setError("Error fetching destinations");
+        console.error("Error fetching international destinations:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchDestinations();
+  }, []);
+
   const nextSlide = () => {
-    setCurrentIndex(
-      (prev) => (prev + 1) % Math.ceil(internationalDestinations.length / 4)
-    );
+    setCurrentIndex((prev) => (prev + 1) % Math.ceil(destinations.length / 4));
   };
 
   const prevSlide = () => {
     setCurrentIndex(
       (prev) =>
-        (prev - 1 + Math.ceil(internationalDestinations.length / 4)) %
-        Math.ceil(internationalDestinations.length / 4)
+        (prev - 1 + Math.ceil(destinations.length / 4)) %
+        Math.ceil(destinations.length / 4)
     );
   };
 
-  const visibleDestinations = internationalDestinations.slice(
+  const visibleDestinations = destinations.slice(
     currentIndex * 4,
     currentIndex * 4 + 4
   );
@@ -130,6 +84,30 @@ export function InternationalDestinations() {
     setSelectedDestination("");
   };
 
+  if (loading) {
+    return (
+      <section className="py-10">
+        <Container size="xl">
+          <div className="flex justify-center items-center h-64">
+            <div className="text-gray-500">Loading destinations...</div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
+  if (error) {
+    return (
+      <section className="py-10">
+        <Container size="xl">
+          <div className="flex justify-center items-center h-64">
+            <div className="text-red-500">{error}</div>
+          </div>
+        </Container>
+      </section>
+    );
+  }
+
   return (
     <section className="py-10 ">
       <Container size="xl">
@@ -146,15 +124,19 @@ export function InternationalDestinations() {
           {/* Navigation */}
           <div className="flex gap-2">
             <button
-            title="Previous Slide"
+              title="Previous Slide"
               onClick={prevSlide}
-              className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200">
+              disabled={destinations.length <= 4}
+              className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <ChevronLeft className="h-5 w-5 text-gray-600" />
             </button>
             <button
-            title="Next Slide"
+              title="Next Slide"
               onClick={nextSlide}
-              className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200">
+              disabled={destinations.length <= 4}
+              className="p-2 rounded-full border border-gray-200 hover:border-yellow-500 hover:bg-yellow-50 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+            >
               <ChevronRight className="h-5 w-5 text-gray-600" />
             </button>
           </div>
@@ -165,6 +147,7 @@ export function InternationalDestinations() {
           {visibleDestinations.map((destination) => (
             <TravelCard
               key={destination.id}
+              slug={destination.slug}
               destination={destination.destination}
               duration={destination.duration}
               image={destination.image}
@@ -185,7 +168,8 @@ export function InternationalDestinations() {
           <Button
             variant="outline"
             size="lg"
-            className="px-8 py-3 border-gray-200 hover:border-yellow-500 hover:bg-yellow-50">
+            className="px-8 py-3 border-gray-200 hover:border-yellow-500 hover:bg-yellow-50"
+          >
             View All Destinations
           </Button>
         </div>

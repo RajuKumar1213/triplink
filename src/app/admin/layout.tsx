@@ -51,12 +51,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
     },
 
     {
-      name: "Adventure",
-      href: "/admin/adventure",
-      icon: Users,
-      current: pathname === "/admin/adventure",
-    },
-    {
       name: "Category",
       href: "/admin/category",
       icon: Users,

@@ -1,7 +1,19 @@
 "use client";
 import { useState } from "react";
-import { useRouter } from "next/navigation";
+import {  function handlePaymentClick() {
+    router.push('/payment');
+  }
+
+  function handleDownloadPDF() {
+    if (packageData) {
+      generatePackagePDF(packageData);
+    } else {
+      // Fallback: show alert if no package data
+      alert('Package information not available for PDF generation');
+    }
+  }eRouter } from "next/navigation";
 import { BookingModal } from "./BookingModal";
+import { generatePackagePDF } from "@/lib/pdfGenerator";
 
 interface Props {
   destination: string;
@@ -10,6 +22,7 @@ interface Props {
   className?: string;
   buttonClassName?: string;
   showPaymentOption?: boolean;
+  packageData?: any; // Add package data for PDF generation
 }
 
 export function BookingActions({
@@ -19,6 +32,7 @@ export function BookingActions({
   className = "",
   buttonClassName = "",
   showPaymentOption = false,
+  packageData,
 }: Props) {
   const [open, setOpen] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);

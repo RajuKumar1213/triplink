@@ -20,8 +20,8 @@ export interface FAQ {
   answer: string;
 }
 
-export interface IPackage {
-  _id: Types.ObjectId; // comes from MongoDB
+export interface IPackage extends Document {
+  _id: Types.ObjectId;
   slug: string;
   name: string;
   region?: string;
@@ -48,6 +48,34 @@ export interface IPackage {
   trending: boolean;
   icon?: string;
 
-  createdAt: Date;
-  updatedAt: Date;
+  createdAt?: Date;
+  updatedAt?: Date;
+}
+
+export interface IPackageRequest {
+  slug: string;
+  name: string;
+  region?: string;
+  shortTagline?: string;
+  heroImage?: string;
+  gallery: string[];
+  duration?: string;
+  difficulty?: string;
+  altitude?: string;
+  bestSeason?: string;
+
+  category?: string;
+
+  overview: string[];
+  highlights: string[];
+  inclusions: string[];
+  exclusions: string[];
+
+  itinerary: Itinerary[];
+  pricing: Pricing[];
+  faqs: FAQ[];
+
+  bookingNote?: string;
+  trending: boolean;
+  icon?: string;
 }
