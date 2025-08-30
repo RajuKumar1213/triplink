@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams } from "next/navigation";
 import { Container } from "@/components/ui/Container";
 import { SectionHeader } from "@/components/ui/SectionHeader";
@@ -26,7 +26,7 @@ interface Destination {
   isPopular: boolean;
 }
 
-export default function AllDestinationsPage() {
+function AllDestinationsContent() {
   const [destinations, setDestinations] = useState<Destination[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -111,6 +111,55 @@ export default function AllDestinationsPage() {
   }
 
   return (
+    <section className="py-20">
+      <Container size="xl">
+        <SectionHeader
+          title={getTitle()}
+          subtitle={getDescription()}
+        />
+
+        {destinations.length === 0 ? (
+          <div className="text-center py-20">
+            <h3 className="text-2xl font-semibold text-gray-600 mb-4">
+              No destinations found
+            </h3>
+            <p className="text-gray-500">
+              We&apos;re working on adding more amazing destinations. Check back soon!
+            </p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
+            {destinations.map((destination) => (
+              <TravelCard
+                key={destination.id}
+                destination={destination.destination}
+                slug={destination.slug}
+                duration={destination.duration}
+                image={destination.image}
+                price={destination.price}
+                originalPrice={destination.originalPrice}
+                rating={destination.rating}
+                reviews={destination.reviews}
+                features={destination.features}
+                discount={destination.discount}
+                isPopular={destination.isPopular}
+              />
+            ))}
+          </div>
+        )}
+      </Container>
+
+      <BookingModal
+        open={isBookingModalOpen}
+        onClose={handleCloseModal}
+        destination={selectedDestination}
+      />
+    </section>
+  );
+}
+
+export default function AllDestinationsPage() {
+  return (
     <div className="bg-white">
       <Header />
       <div className="relative">
@@ -123,54 +172,21 @@ export default function AllDestinationsPage() {
             priority={false}
           />
         </div>
-        <main className="relative">
-          <section className="py-20">
-            <Container size="xl">
-              <SectionHeader
-                title={getTitle()}
-                subtitle={getDescription()}
-              />
-
-              {destinations.length === 0 ? (
-                <div className="text-center py-20">
-                  <h3 className="text-2xl font-semibold text-gray-600 mb-4">
-                    No destinations found
-                  </h3>
-                  <p className="text-gray-500">
-                    We&apos;re working on adding more amazing destinations. Check back soon!
-                  </p>
+        <Suspense fallback={
+          <main className="relative">
+            <section className="py-20">
+              <Container size="xl">
+                <div className="flex justify-center items-center h-64">
+                  <div className="text-gray-500">Loading...</div>
                 </div>
-              ) : (
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 mt-12">
-                  {destinations.map((destination) => (
-                    <TravelCard
-                      key={destination.id}
-                      destination={destination.destination}
-                      slug={destination.slug}
-                      duration={destination.duration}
-                      image={destination.image}
-                      price={destination.price}
-                      originalPrice={destination.originalPrice}
-                      rating={destination.rating}
-                      reviews={destination.reviews}
-                      features={destination.features}
-                      discount={destination.discount}
-                      isPopular={destination.isPopular}
-                    />
-                  ))}
-                </div>
-              )}
-            </Container>
-          </section>
-        </main>
+              </Container>
+            </section>
+          </main>
+        }>
+          <AllDestinationsContent />
+        </Suspense>
       </div>
       <Footer />
-
-      <BookingModal
-        open={isBookingModalOpen}
-        onClose={handleCloseModal}
-        destination={selectedDestination}
-      />
     </div>
   );
 }
