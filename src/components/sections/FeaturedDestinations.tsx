@@ -8,6 +8,7 @@ import {
   Heart,
 } from "lucide-react";
 import Image from "next/image";
+import Link from "next/link";
 
 const destinations = [
   {
@@ -100,10 +101,12 @@ export function FeaturedDestinations() {
                 Handpicked destinations that promise unforgettable experiences
               </p>
             </div>
-            <Button variant="outline" className="mt-6 lg:mt-0">
-              View All Destinations
-              <ArrowRight className="h-4 w-4 ml-2" />
-            </Button>
+            <Link href="/all-destinations">
+              <Button variant="outline" className="mt-6 lg:mt-0">
+                View All Destinations
+                <ArrowRight className="h-4 w-4 ml-2" />
+              </Button>
+            </Link>
           </div>
 
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">

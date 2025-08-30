@@ -35,7 +35,8 @@ const nextConfig: NextConfig = {
       "scontent.xx.fbcdn.net",
       "pbs.twimg.com",
       "abs.twimg.com",
-      "www.atomic-energy.ru"
+      "www.atomic-energy.ru",
+      "orioly.com"
     ],
   },
 };

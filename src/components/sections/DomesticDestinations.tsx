@@ -7,6 +7,7 @@ import { SectionHeader } from "@/components/ui/SectionHeader";
 import { TravelCard } from "@/components/ui/Card";
 import { BookingModal } from "@/components/sections/BookingModal";
 import { ChevronLeft, ChevronRight } from "lucide-react";
+import Link from "next/link";
 
 interface Destination {
   id: string;
@@ -165,13 +166,15 @@ export function DomesticDestinations() {
 
         {/* Bottom CTA */}
         <div className="text-center">
-          <Button
-            variant="outline"
-            size="lg"
-            className="px-8 py-3 border-gray-200 hover:border-yellow-500 hover:bg-yellow-50"
-          >
-            View All Destinations
-          </Button>
+          <Link href="/all-destinations?category=domestic-destinations">
+            <Button
+              variant="outline"
+              size="lg"
+              className="px-8 py-3 border-gray-200 hover:border-yellow-500 hover:bg-yellow-50"
+            >
+              View All Destinations
+            </Button>
+          </Link>
         </div>
       </Container>
 
