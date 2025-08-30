@@ -1,5 +1,4 @@
 import { NextResponse } from "next/server";
-import { asyncHandler } from "@/lib/asyncHandler";
 import connectDb from "@/db/connectDb";
 import Package from "@/models/Package";
 

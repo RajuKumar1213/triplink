@@ -57,21 +57,6 @@ interface PackageData {
   updatedAt: string;
 }
 
-// Static params for known destinations - you can add more as needed
-export function generateStaticParams() {
-  return [
-    { slug: "annapurna-circuit-trek" },
-    { slug: "chopta-tungnath-uttarakhand" },
-    { slug: "himachal-bir-rajgundha-jibhi-kasol-kalga" },
-    { slug: "kashmir-paradise" },
-    { slug: "kashmir-valley-tour" },
-    { slug: "rajasthan-heritage-tour" },
-    { slug: "everest-base-camp-trek" },
-    { slug: "bhutan-cultural-tour" },
-    { slug: "water-spot" },
-  ];
-}
-
 export const dynamicParams = true; // Allow dynamic params for new packages
 
 // Fetch package data from API
@@ -112,9 +97,9 @@ async function getPackageData(slug: string): Promise<PackageData | null> {
 export default async function DestinationPage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: { slug: string };
 }) {
-  const { slug } = await params;
+  const { slug } = params;
   const data = await getPackageData(slug);
 
   if (!data) return notFound();
