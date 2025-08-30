@@ -5,6 +5,8 @@ import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
 import { BookingActions } from "@/components/sections/BookingActions";
 import { backgroundImage } from "@/constant";
+import connectDb from "@/db/connectDb";
+import Package from "@/models/Package";
 
 // Type definitions for the package data
 interface ItineraryDay {
@@ -63,37 +65,24 @@ interface DestinationPageProps {
 
 export const dynamicParams = true; // Allow dynamic params for new packages
 
-// Fetch package data from API
+// Fetch package data directly from the database (server-side)
 async function getPackageData(slug: string): Promise<PackageData | null> {
   try {
-    // Use relative URL for API calls to work on both localhost and production
-    const baseUrl =
-      process.env.NEXT_PUBLIC_BASE_URL ||
-      (process.env.VERCEL_URL
-        ? `https://${process.env.VERCEL_URL}`
-        : "http://localhost:3000");
-    const response = await fetch(`${baseUrl}/api/pakage/${slug}`, {
-      cache: "force-cache", // Enable caching for static generation
-      next: { revalidate: 3600 }, // Revalidate every hour
-    });
+    await connectDb();
 
-    if (!response.ok) {
-      console.error(
-        `API request failed: ${response.status} ${response.statusText}`
-      );
-      return null;
+    // Try to find by slug first, then by ObjectId for backward compatibility
+    let packageData = await Package.findOne({ slug }).lean();
+
+    if (!packageData) {
+      packageData = await Package.findById(slug).lean();
     }
 
-    const result = await response.json();
+    if (!packageData) return null;
 
-    if (result.success && result.data) {
-      return result.data as PackageData;
-    }
-
-    console.error("API response unsuccessful:", result);
-    return null;
+    // Mongoose JS types can be incompatible with our TS interfaces; cast via unknown
+    return packageData as unknown as PackageData;
   } catch (error) {
-    console.error("Error fetching package data:", error);
+    console.error("Error fetching package data from DB:", error);
     return null;
   }
 }
