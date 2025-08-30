@@ -3,7 +3,7 @@
 import React, { useState, useRef } from "react";
 import Image from "next/image";
 import { Button } from "@/components/ui/Button";
-import { Upload, X, ImageIcon, Plus } from "lucide-react";
+import { X, ImageIcon, Plus } from "lucide-react";
 
 interface MultipleImageUploadProps {
   value?: string[];

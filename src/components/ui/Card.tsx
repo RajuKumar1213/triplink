@@ -88,7 +88,6 @@ export function TravelCard({
   rating = 4.8,
   reviews = 324,
   features = [],
-  onBookNow,
   className,
 }: TravelCardProps) {
   return (

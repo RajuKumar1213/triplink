@@ -13,7 +13,6 @@ interface PackageIcon {
   trending?: boolean;
 }
 
-// Horizontal destination slider placed below the header.
 export function DestinationBar() {
   const [currentDestinationIndex, setCurrentDestinationIndex] = useState(0);
   const [itemsPerView, setItemsPerView] = useState(16);
@@ -85,7 +84,7 @@ export function DestinationBar() {
   if (destinations.length === 0) return null;
 
   return (
-    <div className="  border-t border-gray-200">
+    <div className="border-t border-gray-200">
       <Container size="xl" className="px-2!">
         <div className="relative">
           {currentDestinationIndex > 0 && (
@@ -106,7 +105,7 @@ export function DestinationBar() {
                 }%)`,
               }}
             >
-              {destinations.map((destination, index) => (
+              {destinations.map((destination) => (
                 <div
                   key={destination._id}
                   className="flex-shrink-0 justify-center text-center cursor-pointer group relative"
@@ -122,7 +121,7 @@ export function DestinationBar() {
                         alt={destination.slug}
                         width={40}
                         height={40}
-                        className="md:h-8 md:w-8 h-6 w-6 "
+                        className="md:h-8 md:w-8 h-6 w-6"
                       />
                     </div>
                   </Link>

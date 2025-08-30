@@ -64,6 +64,11 @@ export function generateStaticParams() {
     { slug: "chopta-tungnath-uttarakhand" },
     { slug: "himachal-bir-rajgundha-jibhi-kasol-kalga" },
     { slug: "kashmir-paradise" },
+    { slug: "kashmir-valley-tour" },
+    { slug: "rajasthan-heritage-tour" },
+    { slug: "everest-base-camp-trek" },
+    { slug: "bhutan-cultural-tour" },
+    { slug: "water-spot" },
   ];
 }
 
@@ -72,15 +77,21 @@ export const dynamicParams = true; // Allow dynamic params for new packages
 // Fetch package data from API
 async function getPackageData(slug: string): Promise<PackageData | null> {
   try {
-    const response = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/api/pakage/${slug}`,
-      {
-        cache: "force-cache", // Enable caching for static generation
-        next: { revalidate: 3600 }, // Revalidate every hour
-      }
-    );
+    // Use relative URL for API calls to work on both localhost and production
+    const baseUrl =
+      process.env.NEXT_PUBLIC_BASE_URL ||
+      (process.env.VERCEL_URL
+        ? `https://${process.env.VERCEL_URL}`
+        : "http://localhost:3000");
+    const response = await fetch(`${baseUrl}/api/pakage/${slug}`, {
+      cache: "force-cache", // Enable caching for static generation
+      next: { revalidate: 3600 }, // Revalidate every hour
+    });
 
     if (!response.ok) {
+      console.error(
+        `API request failed: ${response.status} ${response.statusText}`
+      );
       return null;
     }
 
@@ -90,6 +101,7 @@ async function getPackageData(slug: string): Promise<PackageData | null> {
       return result.data as PackageData;
     }
 
+    console.error("API response unsuccessful:", result);
     return null;
   } catch (error) {
     console.error("Error fetching package data:", error);

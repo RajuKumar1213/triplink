@@ -7,7 +7,7 @@ interface ErrorWithStatus extends Error {
   status?: number;
 }
 
-export const GET = asyncHandler(async (request: Request) => {
+export async function GET() {
   await connectDb();
 
   try {
@@ -34,4 +34,4 @@ export const GET = asyncHandler(async (request: Request) => {
       { status: 500 }
     );
   }
-});
+}

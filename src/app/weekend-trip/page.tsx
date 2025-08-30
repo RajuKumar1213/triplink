@@ -6,14 +6,6 @@ import { Container } from "@/components/ui/Container";
 import { TravelCard } from "@/components/ui/Card";
 import { BookingModal } from "@/components/sections/BookingModal";
 
-// Carousel images (weekend trip visuals)
-const weekendCarouselImages = [
-  "https://cdn.pixabay.com/photo/2024/07/20/15/52/mountains-8908538_640.jpg",
-  "https://cdn.pixabay.com/photo/2017/05/10/13/39/ladakh-2300904_640.jpg",
-  "https://cdn.pixabay.com/photo/2019/08/14/09/34/zal-zal-lake-azad-kashmir-4405230_1280.jpg",
-  "https://static.toiimg.com/photo/80398554.cms",
-];
-
 // Card data for weekend trips
 const weekendTrips = [
   {
@@ -107,7 +99,8 @@ const WeekendTripPage = () => {
         <div className="relative z-10 text-center">
           <h1 className="text-5xl font-bold mb-4">Weekend Getaways</h1>
           <p className="text-xl max-w-2xl mx-auto">
-            Perfect short escapes for busy schedules. Discover amazing destinations in just 2-3 days!
+            Perfect short escapes for busy schedules. Discover amazing
+            destinations in just 2-3 days!
           </p>
         </div>
       </section>
@@ -119,8 +112,9 @@ const WeekendTripPage = () => {
             Popular Weekend Destinations
           </h2>
           <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-            Choose from our curated collection of weekend trips designed for maximum enjoyment
-            and minimum planning. Each trip includes accommodation, activities, and local experiences.
+            Choose from our curated collection of weekend trips designed for
+            maximum enjoyment and minimum planning. Each trip includes
+            accommodation, activities, and local experiences.
           </p>
         </div>
 
@@ -154,32 +148,70 @@ const WeekendTripPage = () => {
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="text-center">
               <div className="bg-blue-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                <svg
+                  className="w-8 h-8 text-blue-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                  />
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2">Quick & Convenient</h3>
-              <p className="text-gray-600">Perfect for busy schedules with minimal time commitment</p>
+              <p className="text-gray-600">
+                Perfect for busy schedules with minimal time commitment
+              </p>
             </div>
 
             <div className="text-center">
               <div className="bg-green-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                <svg
+                  className="w-8 h-8 text-green-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"
+                  />
                 </svg>
               </div>
-              <h3 className="text-xl font-semibold mb-2">Curated Experiences</h3>
-              <p className="text-gray-600">Handpicked activities and accommodations for memorable trips</p>
+              <h3 className="text-xl font-semibold mb-2">
+                Curated Experiences
+              </h3>
+              <p className="text-gray-600">
+                Handpicked activities and accommodations for memorable trips
+              </p>
             </div>
 
             <div className="text-center">
               <div className="bg-purple-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                <svg className="w-8 h-8 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1" />
+                <svg
+                  className="w-8 h-8 text-purple-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth={2}
+                    d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1"
+                  />
                 </svg>
               </div>
               <h3 className="text-xl font-semibold mb-2">Best Value</h3>
-              <p className="text-gray-600">Competitive pricing with all-inclusive packages</p>
+              <p className="text-gray-600">
+                Competitive pricing with all-inclusive packages
+              </p>
             </div>
           </div>
         </Container>
@@ -189,9 +221,12 @@ const WeekendTripPage = () => {
       <section className="bg-gradient-to-r from-yellow-400 to-orange-500 py-16">
         <Container>
           <div className="text-center text-white">
-            <h2 className="text-4xl font-bold mb-4">Ready for Your Weekend Escape?</h2>
+            <h2 className="text-4xl font-bold mb-4">
+              Ready for Your Weekend Escape?
+            </h2>
             <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Book your perfect weekend getaway today and create unforgettable memories!
+              Book your perfect weekend getaway today and create unforgettable
+              memories!
             </p>
             <button className="bg-white text-orange-500 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
               Start Planning
