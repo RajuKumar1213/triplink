@@ -1,25 +1,25 @@
-'use client';
+"use client";
 
-import { useState } from 'react';
-import { Container } from '@/components/ui/Container';
+import { useState } from "react";
+import { Container } from "@/components/ui/Container";
 
 export function BookingForm() {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    phone: ''
+    name: "",
+    email: "",
+    phone: "",
   });
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value
+      [e.target.name]: e.target.value,
     });
   };
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    console.log('Form submitted:', formData);
+    console.log("Form submitted:", formData);
   };
 
   return (
@@ -42,7 +42,10 @@ export function BookingForm() {
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4 items-end">
                 {/* Name */}
                 <div>
-                  <label htmlFor="name" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="name"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Full Name
                   </label>
                   <input
@@ -59,7 +62,10 @@ export function BookingForm() {
 
                 {/* Email */}
                 <div>
-                  <label htmlFor="email" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="email"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Email
                   </label>
                   <input
@@ -76,7 +82,10 @@ export function BookingForm() {
 
                 {/* Phone */}
                 <div>
-                  <label htmlFor="phone" className="block text-sm font-semibold text-gray-700 mb-1">
+                  <label
+                    htmlFor="phone"
+                    className="block text-sm font-semibold text-gray-700 mb-1"
+                  >
                     Phone
                   </label>
                   <input
@@ -105,8 +114,13 @@ export function BookingForm() {
 
             {/* Footer note */}
             <div className="mt-6 text-center text-xs sm:text-sm text-gray-600 leading-snug">
-              ✅ I accept the <span className="font-semibold text-gray-800">Privacy Policy</span> and authorise{" "}
-              <span className="font-bold text-yellow-600">Triplink & Co.</span> to contact me with details.
+              ✅ I accept the{" "}
+              <span className="font-semibold text-gray-800">
+                Privacy Policy
+              </span>{" "}
+              and authorise{" "}
+              <span className="font-bold text-yellow-600">Triplink & Co.</span>{" "}
+              to contact me with details.
             </div>
           </div>
         </div>

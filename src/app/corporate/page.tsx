@@ -1,5 +1,5 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { Header } from "@/components/sections/Header";
 import { Footer } from "@/components/sections/Footer";
@@ -16,56 +16,47 @@ const carouselImages = [
   "https://images.pexels.com/photos/3184339/pexels-photo-3184339.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=2",
 ];
 
-const corporatePrograms = [
-  {
-    destination: "Leadership Retreat - Himachal",
-    duration: "3N | 4D",
-    image: carouselImages[1],
-    price: 69999,
-    originalPrice: 89999,
-    rating: 4.9,
-    reviews: 48,
-    features: [
-      "Facilitated Workshops",
-      "Outdoor Challenges",
-      "Strategy Sessions",
-    ],
-  },
-  {
-    destination: "Team Offsite - Goa",
-    duration: "2N | 3D",
-    image: carouselImages[3],
-    price: 49999,
-    originalPrice: 64999,
-    rating: 4.8,
-    reviews: 76,
-    features: ["Beach Activities", "Team Building", "Evening Gala"],
-  },
-  {
-    destination: "Corporate Wellness - Kerala",
-    duration: "4N | 5D",
-    image: carouselImages[0],
-    price: 79999,
-    originalPrice: 94999,
-    rating: 4.7,
-    reviews: 31,
-    features: ["Wellness Sessions", "Meditation", "Ayurvedic Therapies"],
-  },
-  {
-    destination: "Incentive Trip - Maldives",
-    duration: "4N | 5D",
-    image: carouselImages[2],
-    price: 199999,
-    originalPrice: 249999,
-    rating: 5.0,
-    reviews: 12,
-    features: ["Luxury Resort", "Seaplane Transfer", "Private Dinners"],
-  },
-];
+interface CardItem {
+  id: string;
+  slug?: string;
+  destination: string;
+  duration?: string;
+  image?: string;
+  price?: number;
+  originalPrice?: number;
+  rating?: number;
+  reviews?: number;
+  features?: string[];
+}
 
 export default function CorporatePage() {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState("");
+  const [corporatePrograms, setCorporatePrograms] = useState<CardItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchCards = async () => {
+      try {
+        const res = await fetch(`/api/package-card?category=corporate`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const json = await res.json();
+        if (mounted && json && json.success && Array.isArray(json.data)) {
+          setCorporatePrograms(json.data as CardItem[]);
+        }
+      } catch (err) {
+        console.error("Failed to load corporate packages:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchCards();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleBookNow = (destination: string) => {
     setSelectedDestination(destination);
@@ -80,45 +71,46 @@ export default function CorporatePage() {
   return (
     <>
       <Header />
-      <Container>
-        <section className="relative">
-          <div className="relative w-full">
-            <div className="relative py-6 md:py-4">
-              <div className="flex w-full overflow-x-auto snap-x snap-mandatory scroll-smooth gap-4 md:gap-6 [&::-webkit-scrollbar]:hidden">
-                {carouselImages.map((src, i) => (
-                  <div
-                    key={src + i}
-                    className="relative flex-shrink-0 snap-start w-48 h-48 md:w-80 md:h-80 overflow-hidden  shadow-sm shadow-yellow-100/50 ring-1 ring-yellow-200/50">
-                    <Image
-                      src={src}
-                      alt={`Corporate visual ${i + 1}`}
-                      fill
-                      priority={i === 0}
-                      className="object-cover"
-                      sizes="(min-width:1024px) 18rem, 12rem"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60 hover:opacity-40 transition" />
-                  </div>
-                ))}
-              </div>
-              <div className="absolute left-0 top-0 h-full w-4 bg-gradient-to-r from-white to-transparent pointer-events-none" />
-              <div className="absolute right-0 top-0 h-full w-4 bg-gradient-to-l from-white to-transparent pointer-events-none" />
-            </div>
-            <Container className="mt-4 bg-white/80 backdrop-blur-md border border-yellow-200/60 rounded-2xl p-6 md:p-8 shadow-lg shadow-yellow-100/50">
-              <div className="flex flex-col gap-4">
-                <p className="uppercase tracking-[0.35em] text-[10px] md:text-xs font-semibold text-yellow-600">
+      {/* HERO: polished corporate look */}
+      <section className="relative">
+        <div
+          className="relative h-[520px] md:h-[560px] bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://www.gotap.id/wp-content/uploads/2023/07/personal-business-trip-and-companies-business-trip-1024x478.png')",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/60" />
+
+          <div className="relative z-10 h-full flex items-center">
+            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+              <div className="max-w-2xl text-center md:text-left">
+                <p className="uppercase tracking-widest text-yellow-300 font-semibold mb-3">
                   Corporate Programs
                 </p>
-                <h1 className="text-3xl md:text-4xl font-black leading-tight text-gray-900 tracking-tight">
-                  Corporate Travel & Retreats
+                <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                  Team Retreats & Corporate Travel
                 </h1>
-              </div>
-            </Container>
-          </div>
-        </section>
-      </Container>
+                <p className="text-lg text-white/90 mb-6">
+                  Bespoke corporate retreats, leadership offsites and team
+                  experiences crafted to align with your company goals.
+                </p>
 
-      <div className="relative mt-8">
+                <div className="flex gap-3 justify-center md:justify-start">
+                  <button
+                    onClick={() => setIsBookingModalOpen(true)}
+                    className="inline-block border border-white/30 text-white px-5 py-3 rounded-md hover:bg-white/5"
+                  >
+                    Request Quote
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <div className="relative ">
         <div className="absolute inset-0 opacity-10">
           <Image
             src={backgroundImage}
@@ -130,20 +122,46 @@ export default function CorporatePage() {
         </div>
         <Container className="py-12">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {corporatePrograms.map((t) => (
-              <TravelCard
-                key={t.destination}
-                destination={t.destination}
-                duration={t.duration}
-                image={t.image}
-                price={t.price}
-                originalPrice={t.originalPrice}
-                rating={t.rating}
-                reviews={t.reviews}
-                features={t.features}
-                onBookNow={() => handleBookNow(t.destination)}
-              />
-            ))}
+            {loading ? (
+              <div className="col-span-full text-center py-10">Loading...</div>
+            ) : corporatePrograms.length === 0 ? (
+              <div className="col-span-full flex flex-col items-center justify-center py-16">
+                <div className="max-w-xl text-center">
+                  <div className="mx-auto w-full max-w-md h-auto rounded-lg shadow-lg overflow-hidden">
+                    <Image
+                      src="https://orioly.com/wp-content/uploads/2022/08/1600x900-1.png"
+                      alt="No travel found illustration"
+                      width={800}
+                      height={450}
+                      className="object-cover w-full h-full"
+                    />
+                  </div>
+                  <h3 className="mt-8 text-3xl font-extrabold text-gray-900">
+                    Travel not found
+                  </h3>
+                  <p className="mt-3 text-gray-600">
+                    We couldn&apos;t find any corporate packages right now. Try
+                    checking other categories or contact us for a tailored
+                    program.
+                  </p>
+                </div>
+              </div>
+            ) : (
+              corporatePrograms.map((t: CardItem) => (
+                <TravelCard
+                  key={t.id || t.destination}
+                  destination={t.destination}
+                  duration={t.duration || ""}
+                  image={t.image || ""}
+                  price={t.price ?? 0}
+                  originalPrice={t.originalPrice ?? 0}
+                  rating={t.rating ?? 0}
+                  reviews={t.reviews ?? 0}
+                  features={t.features}
+                  onBookNow={() => handleBookNow(t.destination)}
+                />
+              ))
+            )}
           </div>
         </Container>
       </div>

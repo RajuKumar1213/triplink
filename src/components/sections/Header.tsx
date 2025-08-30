@@ -34,7 +34,7 @@ export function Header() {
     { label: "Corporate", href: "/corporate" },
     { 
       label: "Trip Tours", 
-      href: "/trip-tours",
+      href: "#",
       dropdownItems: [
         { label: "Weekend Trip", href: "/weekend-trip" },
         { label: "50+ Trips", href: "/50-plus-trips" }

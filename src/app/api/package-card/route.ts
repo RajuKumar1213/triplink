@@ -12,7 +12,7 @@ export const GET = asyncHandler(async (request: Request) => {
   // If no category provided, return all packages
   if (!category) {
     const packages = await Package.find()
-      .select("_id name duration heroImage pricing highlights trending slug")
+      .select("_id name duration heroImage pricing highlights trending slug category")
       .lean();
 
     const cards = packages.map((pkg) => {
@@ -39,6 +39,7 @@ export const GET = asyncHandler(async (request: Request) => {
         features: pkg.highlights || [],
         discount,
         isPopular: !!pkg.trending,
+        category: pkg.category || "general",
       };
     });
 

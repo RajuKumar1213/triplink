@@ -1,84 +1,55 @@
 "use client";
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Header } from "@/components/sections/Header";
+import Image from "next/image";
 import { Footer } from "@/components/sections/Footer";
 import { Container } from "@/components/ui/Container";
 import { TravelCard } from "@/components/ui/Card";
 import { BookingModal } from "@/components/sections/BookingModal";
+import Link from "next/link";
 
-// Card data for weekend trips
-const weekendTrips = [
-  {
-    destination: "Shimla Weekend Getaway",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2019/08/14/09/34/zal-zal-lake-azad-kashmir-4405230_1280.jpg",
-    price: 8999,
-    originalPrice: 12999,
-    rating: 4.6,
-    reviews: 145,
-    features: ["Mall Road", "Jakhoo Temple", "Scenic Views"],
-  },
-  {
-    destination: "Nainital Lakeside Escape",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2017/05/10/13/39/ladakh-2300904_640.jpg",
-    price: 7999,
-    originalPrice: 10999,
-    rating: 4.5,
-    reviews: 98,
-    features: ["Naini Lake", "Cable Car", "Boating"],
-  },
-  {
-    destination: "Mussoorie Hill Station",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2024/07/20/15/52/mountains-8908538_640.jpg",
-    price: 6999,
-    originalPrice: 9999,
-    rating: 4.4,
-    reviews: 87,
-    features: ["Camel's Back Road", "Kempty Falls", "Gun Hill"],
-  },
-  {
-    destination: "Rishikesh Adventure Weekend",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2019/08/14/09/34/zal-zal-lake-azad-kashmir-4405230_1280.jpg",
-    price: 9499,
-    originalPrice: 13999,
-    rating: 4.7,
-    reviews: 112,
-    features: ["River Rafting", "Ganga Aarti", "Adventure Sports"],
-  },
-  {
-    destination: "Goa Beach Weekend",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2017/05/10/13/39/ladakh-2300904_640.jpg",
-    price: 11999,
-    originalPrice: 15999,
-    rating: 4.8,
-    reviews: 203,
-    features: ["Beach Hopping", "Water Sports", "Nightlife"],
-  },
-  {
-    destination: "Jaipur Heritage Weekend",
-    duration: "2N | 3D",
-    image:
-      "https://cdn.pixabay.com/photo/2024/07/20/15/52/mountains-8908538_640.jpg",
-    price: 8499,
-    originalPrice: 11999,
-    rating: 4.6,
-    reviews: 134,
-    features: ["City Palace", "Hawa Mahal", "Local Markets"],
-  },
-];
+// Card item type (returned by /api/package-card)
+interface CardItem {
+  id: string;
+  slug?: string;
+  destination: string;
+  duration?: string;
+  image?: string;
+  price?: number;
+  originalPrice?: number;
+  rating?: number;
+  reviews?: number;
+  features?: string[];
+}
 
 const WeekendTripPage = () => {
   const [isBookingModalOpen, setIsBookingModalOpen] = useState(false);
   const [selectedDestination, setSelectedDestination] = useState("");
+  const [weekendTrips, setWeekendTrips] = useState<CardItem[]>([]);
+  const [loading, setLoading] = useState<boolean>(true);
+
+  useEffect(() => {
+    let mounted = true;
+    const fetchCards = async () => {
+      try {
+        const res = await fetch(`/api/package-card?category=weekend-trip`);
+        if (!res.ok) throw new Error(`API error ${res.status}`);
+        const json = await res.json();
+        if (mounted && json && json.success && Array.isArray(json.data)) {
+          setWeekendTrips(json.data as CardItem[]);
+        }
+      } catch (err) {
+        console.error("Failed to load weekend packages:", err);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+
+    fetchCards();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleBookNow = (destination: string) => {
     setSelectedDestination(destination);
@@ -93,15 +64,42 @@ const WeekendTripPage = () => {
     <div className="min-h-screen bg-gray-50">
       <Header />
 
-      {/* Hero Section */}
-      <section className="relative h-96 bg-gradient-to-r from-blue-600 to-purple-700 flex items-center justify-center text-white">
-        <div className="absolute inset-0 bg-black bg-opacity-40"></div>
-        <div className="relative z-10 text-center">
-          <h1 className="text-5xl font-bold mb-4">Weekend Getaways</h1>
-          <p className="text-xl max-w-2xl mx-auto">
-            Perfect short escapes for busy schedules. Discover amazing
-            destinations in just 2-3 days!
-          </p>
+      {/* Hero Section (updated) */}
+      <section className="relative">
+        <div
+          className="relative h-[520px] md:h-[560px] bg-cover bg-center"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1501785888041-af3ef285b470?auto=format&fit=crop&w=1600&q=80')",
+          }}
+        >
+          <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-transparent to-black/50" />
+
+          <div className="relative z-10 h-full flex items-center">
+            <div className="container mx-auto px-4 flex flex-col md:flex-row items-center gap-8">
+              <div className="max-w-2xl text-center md:text-left">
+                <p className="uppercase tracking-widest text-yellow-300 font-semibold mb-3">
+                  Weekend Escapes
+                </p>
+                <h1 className="text-4xl md:text-6xl font-extrabold text-white leading-tight mb-4">
+                  Short trips, big memories
+                </h1>
+                <p className="text-lg text-white/90 mb-6">
+                  Curated weekend getaways for every mood — adventure,
+                  relaxation and local experiences packed into 2–3 days.
+                </p>
+
+                <div className="flex gap-3 justify-center md:justify-start">
+                  <button
+                    onClick={() => setIsBookingModalOpen(true)}
+                    className="inline-block border border-white/30 text-white px-5 py-3 rounded-md hover:bg-white/5"
+                  >
+                    Plan a Trip
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
@@ -118,21 +116,55 @@ const WeekendTripPage = () => {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-          {weekendTrips.map((trip, index) => (
-            <TravelCard
-              key={index}
-              destination={trip.destination}
-              duration={trip.duration}
-              image={trip.image}
-              price={trip.price}
-              originalPrice={trip.originalPrice}
-              rating={trip.rating}
-              reviews={trip.reviews}
-              features={trip.features}
-              onBookNow={() => handleBookNow(trip.destination)}
-            />
-          ))}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+          {loading ? (
+            <div className="col-span-full text-center py-10">Loading...</div>
+          ) : weekendTrips.length === 0 ? (
+            <div className="col-span-full flex flex-col items-center justify-center py-16">
+              <div className="max-w-xl text-center">
+                <div className="mx-auto w-full max-w-md h-auto rounded-lg shadow-lg overflow-hidden">
+                  <Image
+                    src="https://orioly.com/wp-content/uploads/2022/08/1600x900-1.png"
+                    alt="No travel found illustration"
+                    width={800}
+                    height={450}
+                    className="object-cover w-full h-full"
+                  />
+                </div>
+                <h3 className="mt-8 text-3xl font-extrabold text-gray-900">
+                  Travel not found
+                </h3>
+                <p className="mt-3 text-gray-600">
+                  We couldn&apos;t find any weekend trips right now. Try
+                  browsing other categories or come back later.
+                </p>
+                <div className="mt-6 flex items-center justify-center gap-3">
+                  <Link
+                    href="/50-plus-trips"
+                    className="inline-block bg-yellow-500 text-white px-6 py-2 rounded-lg font-semibold hover:bg-yellow-600 transition"
+                  >
+                    Browse all destinations
+                  </Link>
+                </div>
+              </div>
+            </div>
+          ) : (
+            weekendTrips.map((trip: CardItem, index: number) => (
+              <TravelCard
+                slug={trip.slug || ""}
+                key={trip.id || index}
+                destination={trip.destination}
+                duration={trip.duration || ""}
+                image={trip.image || ""}
+                price={trip.price ?? 0}
+                originalPrice={trip.originalPrice ?? 0}
+                rating={trip.rating ?? 0}
+                reviews={trip.reviews ?? 0}
+                features={trip.features}
+                onBookNow={() => handleBookNow(trip.destination)}
+              />
+            ))
+          )}
         </div>
       </Container>
 
@@ -213,24 +245,6 @@ const WeekendTripPage = () => {
                 Competitive pricing with all-inclusive packages
               </p>
             </div>
-          </div>
-        </Container>
-      </section>
-
-      {/* Call to Action */}
-      <section className="bg-gradient-to-r from-yellow-400 to-orange-500 py-16">
-        <Container>
-          <div className="text-center text-white">
-            <h2 className="text-4xl font-bold mb-4">
-              Ready for Your Weekend Escape?
-            </h2>
-            <p className="text-xl mb-8 max-w-2xl mx-auto">
-              Book your perfect weekend getaway today and create unforgettable
-              memories!
-            </p>
-            <button className="bg-white text-orange-500 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition-colors">
-              Start Planning
-            </button>
           </div>
         </Container>
       </section>
