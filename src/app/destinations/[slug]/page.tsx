@@ -58,7 +58,7 @@ interface PackageData {
 }
 
 interface DestinationPageProps {
-  params: { slug: string };
+  params: Promise<{ slug: string }>;
 }
 
 export const dynamicParams = true; // Allow dynamic params for new packages
@@ -101,7 +101,7 @@ async function getPackageData(slug: string): Promise<PackageData | null> {
 export default async function DestinationPage({
   params,
 }: DestinationPageProps) {
-  const { slug } = params;
+  const { slug } = await params;
   const data = await getPackageData(slug);
 
   if (!data) return notFound();
