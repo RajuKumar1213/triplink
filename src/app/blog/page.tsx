@@ -1,14 +1,32 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { Header } from "@/components/sections/Header";
 import { Container } from "@/components/ui/Container";
 import { Footer } from "@/components/sections/Footer";
 
+interface BlogPost {
+  _id: string;
+  title: string;
+  slug: string;
+  excerpt: string;
+  content: string;
+  featuredImage?: string;
+  category: string;
+  tags: string[];
+  isPublished: boolean;
+  views: number;
+  createdAt: string;
+  updatedAt: string;
+}
+
 const BlogPage = () => {
   const [activeCategory, setActiveCategory] = useState("all");
+  const [blogPosts, setBlogPosts] = useState<BlogPost[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
   // Blog categories
   const categories = [
@@ -19,69 +37,58 @@ const BlogPage = () => {
     { id: "culture", name: "Local Culture" },
   ];
 
-  // Blog posts data
-  const blogPosts = [
-    {
-      id: 1,
-      title: "10 Hidden Gems in Bali That Even Celebrities Love",
-      excerpt: "Discover the secluded spots in Bali where A-listers escape the paparazzi and find true peace.",
-      image: "https://images.unsplash.com/photo-1518548419970-58e3b4079ab2?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "destinations",
-      date: "August 25, 2025",
-      readTime: "5 min read",
-    },
-    {
-      id: 2,
-      title: "Ultimate Guide to Luxury Safari in Kenya",
-      excerpt: "Experience the wild in style with our comprehensive guide to Kenya's most exclusive safari experiences.",
-      image: "https://images.unsplash.com/photo-1516426122078-c23e76319801?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "luxury",
-      date: "August 22, 2025",
-      readTime: "7 min read",
-    },
-    {
-      id: 3,
-      title: "Cultural Immersion: Beyond the Tourist Trail in Japan",
-      excerpt: "Step off the beaten path and discover authentic Japanese culture through local experiences.",
-      image: "https://images.unsplash.com/photo-1490806843957-31f4c9a91c65?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "culture",
-      date: "August 20, 2025",
-      readTime: "6 min read",
-    },
-    {
-      id: 4,
-      title: "Packing Like a Pro: Celebrity Travel Secrets Revealed",
-      excerpt: "Learn the insider tips and tricks that celebrities use to pack efficiently for any trip.",
-      image: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "tips",
-      date: "August 18, 2025",
-      readTime: "4 min read",
-    },
-    {
-      id: 5,
-      title: "The French Riviera's Best Kept Secrets",
-      excerpt: "Explore the hidden corners of the Côte d'Azur that offer glamour without the crowds.",
-      image: "https://images.unsplash.com/photo-1503918886996-8e5c6c0ad951?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "destinations",
-      date: "August 15, 2025",
-      readTime: "8 min read",
-    },
-    {
-      id: 6,
-      title: "Sustainable Luxury: Eco-Friendly Resorts That Don't Compromise on Comfort",
-      excerpt: "Discover how luxury and sustainability can coexist at these breathtaking eco-resorts around the world.",
-      image: "https://images.unsplash.com/photo-1566073771259-6a8506099945?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80",
-      category: "luxury",
-      date: "August 12, 2025",
-      readTime: "9 min read",
-    },
-  ];
+  // Fetch blog data from backend
+  useEffect(() => {
+    const fetchBlogs = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/blog');
+        const result = await response.json();
+
+        if (result.success) {
+          // Filter only published blogs
+          const publishedBlogs = result.data.filter((blog: BlogPost) => blog.isPublished);
+          setBlogPosts(publishedBlogs);
+        } else {
+          setError('Failed to fetch blogs');
+        }
+      } catch (err) {
+        setError('Error fetching blogs');
+        console.error('Error fetching blogs:', err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchBlogs();
+  }, []);
 
   // Filter posts based on selected category
   const filteredPosts =
     activeCategory === "all"
       ? blogPosts
-      : blogPosts.filter((post) => post.category === activeCategory);
+      : blogPosts.filter((post) => post.category.toLowerCase() === activeCategory);
+
+  // Format date helper
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    });
+  };
+
+  // Calculate read time (rough estimate: 200 words per minute)
+  const calculateReadTime = (content: string) => {
+    const wordsPerMinute = 200;
+    const words = content.split(' ').length;
+    const minutes = Math.ceil(words / wordsPerMinute);
+    return `${minutes} min read`;
+  };
+
+  // Get featured post (most recent published blog)
+  const featuredPost = blogPosts.length > 0 ? blogPosts[0] : null;
 
   return (
     <>
@@ -124,96 +131,176 @@ const BlogPage = () => {
 
       {/* Featured Post */}
       <Container className="mb-16">
-        <div className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 border border-yellow-200/60">
-          <div className="md:flex">
-            <div className="md:flex-1 relative h-80 md:h-auto">
-              <Image
-                src="https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"
-                alt="Featured travel destination"
-                fill
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60" />
-            </div>
-            <div className="md:flex-1 p-8 md:p-12 flex flex-col justify-center">
-              <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full mb-4">
-                FEATURED
-              </span>
-              <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
-                The Art of Slow Travel: Embracing the Journey
-              </h2>
-              <p className="text-gray-600 mb-6">
-                In our fast-paced world, the concept of slow travel has emerged
-                as a luxurious alternative. It&apos;s not just about the destination,
-                but about immersing yourself in the experience, the culture, and
-                the moments in between. Discover how to travel deeper rather
-                than faster.
-              </p>
-              <div className="flex items-center text-sm text-gray-500 mb-6">
-                <span>June 2, 2023</span>
-                <span className="mx-2">•</span>
-                <span>12 min read</span>
+        {loading ? (
+          <div className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 border border-yellow-200/60 animate-pulse">
+            <div className="md:flex">
+              <div className="md:flex-1 h-80 md:h-auto bg-gray-200"></div>
+              <div className="md:flex-1 p-8 md:p-12">
+                <div className="h-6 bg-gray-200 rounded-full mb-4 w-24"></div>
+                <div className="h-8 bg-gray-200 rounded mb-4 w-3/4"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                <div className="h-4 bg-gray-200 rounded mb-2 w-5/6"></div>
+                <div className="h-4 bg-gray-200 rounded mb-6 w-4/6"></div>
+                <div className="h-4 bg-gray-200 rounded mb-6 w-32"></div>
+                <div className="h-10 bg-gray-200 rounded-full w-40"></div>
               </div>
-              <Link
-                href="/blog/1"
-                className="inline-flex items-center px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full hover:bg-yellow-600 transition-colors shadow-lg"
-              >
-                Read Full Article →
-              </Link>
             </div>
           </div>
-        </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+            <div className="text-red-600 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Blogs</h3>
+            <p className="text-red-600">{error}</p>
+          </div>
+        ) : featuredPost ? (
+          <div className="bg-white rounded-2xl overflow-hidden shadow-lg shadow-yellow-100/50 border border-yellow-200/60">
+            <div className="md:flex">
+              <div className="md:flex-1 relative h-80 md:h-auto">
+                <Image
+                  src={featuredPost.featuredImage || "https://images.unsplash.com/photo-1520250497591-112f2f40a3f4?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=870&q=80"}
+                  alt={featuredPost.title}
+                  fill
+                  className="object-cover"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/10 to-transparent opacity-60" />
+              </div>
+              <div className="md:flex-1 p-8 md:p-12 flex flex-col justify-center">
+                <span className="inline-block px-3 py-1 bg-yellow-100 text-yellow-800 text-xs font-semibold rounded-full mb-4">
+                  FEATURED
+                </span>
+                <h2 className="text-2xl md:text-3xl font-bold text-gray-900 mb-4">
+                  {featuredPost.title}
+                </h2>
+                <p className="text-gray-600 mb-6">
+                  {featuredPost.excerpt}
+                </p>
+                <div className="flex items-center text-sm text-gray-500 mb-6">
+                  <span>{formatDate(featuredPost.createdAt)}</span>
+                  <span className="mx-2">•</span>
+                  <span>{calculateReadTime(featuredPost.content)}</span>
+                </div>
+                <Link
+                  href={`/blog/${featuredPost.slug}`}
+                  className="inline-flex items-center px-6 py-3 bg-yellow-500 text-white font-semibold rounded-full hover:bg-yellow-600 transition-colors shadow-lg"
+                >
+                  Read Full Article →
+                </Link>
+              </div>
+            </div>
+          </div>
+        ) : (
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Featured Blog</h3>
+            <p className="text-gray-500">No published blogs available at the moment.</p>
+          </div>
+        )}
       </Container>
 
       {/* Blog Grid */}
       <Container className="pb-16">
-        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
-          {filteredPosts.map((post) => (
-            <article
-              key={post.id}
-              className="bg-white rounded-xl overflow-hidden shadow-md shadow-yellow-100/30 border border-yellow-200/40 hover:shadow-lg hover:shadow-yellow-100/50 transition-all duration-300"
-            >
-              <div className="relative h-48">
-                <Image
-                  src={post.image}
-                  alt={post.title}
-                  fill
-                  className="object-cover"
-                />
-                <div className="absolute top-4 right-4">
-                  <span className="px-2 py-1 bg-white text-yellow-700 text-xs font-medium rounded-full capitalize">
-                    {post.category}
-                  </span>
+        {loading ? (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {[...Array(6)].map((_, index) => (
+              <article key={index} className="bg-white rounded-xl overflow-hidden shadow-md shadow-yellow-100/30 border border-yellow-200/40 animate-pulse">
+                <div className="h-48 bg-gray-200"></div>
+                <div className="p-6">
+                  <div className="h-6 bg-gray-200 rounded mb-2 w-3/4"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-2 w-full"></div>
+                  <div className="h-4 bg-gray-200 rounded mb-4 w-2/3"></div>
+                  <div className="flex justify-between items-center mb-4">
+                    <div className="h-3 bg-gray-200 rounded w-20"></div>
+                    <div className="h-3 bg-gray-200 rounded w-16"></div>
+                  </div>
+                  <div className="h-4 bg-gray-200 rounded w-24"></div>
                 </div>
-              </div>
-              <div className="p-6">
-                <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
-                  {post.title}
-                </h3>
-                <p className="text-gray-600 mb-4 text-sm line-clamp-2">
-                  {post.excerpt}
-                </p>
-                <div className="flex justify-between items-center text-xs text-gray-500 mb-4">
-                  <span>{post.date}</span>
-                  <span>{post.readTime}</span>
+              </article>
+            ))}
+          </div>
+        ) : error ? (
+          <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center">
+            <div className="text-red-600 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-red-800 mb-2">Error Loading Blogs</h3>
+            <p className="text-red-600">{error}</p>
+          </div>
+        ) : filteredPosts.length === 0 ? (
+          <div className="bg-gray-50 border border-gray-200 rounded-2xl p-8 text-center">
+            <div className="text-gray-400 mb-4">
+              <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+              </svg>
+            </div>
+            <h3 className="text-lg font-semibold text-gray-600 mb-2">No Blogs Found</h3>
+            <p className="text-gray-500">
+              {activeCategory === "all"
+                ? "No published blogs available at the moment."
+                : `No blogs found in the "${categories.find(cat => cat.id === activeCategory)?.name}" category.`
+              }
+            </p>
+          </div>
+        ) : (
+          <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+            {filteredPosts.map((post) => (
+              <article
+                key={post._id}
+                className="bg-white rounded-xl overflow-hidden shadow-md shadow-yellow-100/30 border border-yellow-200/40 hover:shadow-lg hover:shadow-yellow-100/50 transition-all duration-300"
+              >
+                <div className="relative h-48">
+                  <Image
+                    src={post.featuredImage || "https://images.unsplash.com/photo-1488646953014-85cb44e25828?ixlib=rb-4.0.3&auto=format&fit=crop&w=870&q=80"}
+                    alt={post.title}
+                    fill
+                    className="object-cover"
+                  />
+                  <div className="absolute top-4 right-4">
+                    <span className="px-2 py-1 bg-white text-yellow-700 text-xs font-medium rounded-full capitalize">
+                      {post.category}
+                    </span>
+                  </div>
                 </div>
-                <Link
-                  href={`/blog/${post.id}`}
-                  className="inline-flex items-center text-yellow-600 font-semibold hover:text-yellow-700 transition-colors"
-                >
-                  Read More →
-                </Link>
-              </div>
-            </article>
-          ))}
-        </div>
+                <div className="p-6">
+                  <h3 className="text-xl font-bold text-gray-900 mb-2 line-clamp-2">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 mb-4 text-sm line-clamp-2">
+                    {post.excerpt}
+                  </p>
+                  <div className="flex justify-between items-center text-xs text-gray-500 mb-4">
+                    <span>{formatDate(post.createdAt)}</span>
+                    <span>{calculateReadTime(post.content)}</span>
+                  </div>
+                  <Link
+                    href={`/blog/${post.slug}`}
+                    className="inline-flex items-center text-yellow-600 font-semibold hover:text-yellow-700 transition-colors"
+                  >
+                    Read More →
+                  </Link>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
 
-        {/* Load More Button */}
-        <div className="text-center mt-12">
-          <button className="px-8 py-3 bg-yellow-500 text-white font-medium rounded-full hover:bg-yellow-600 transition-colors shadow-lg shadow-yellow-200">
-            Load More Articles
-          </button>
-        </div>
+        {/* Load More Button - Only show if there are blogs and not loading */}
+        {!loading && !error && filteredPosts.length > 0 && (
+          <div className="text-center mt-12">
+            <button className="px-8 py-3 bg-yellow-500 text-white font-medium rounded-full hover:bg-yellow-600 transition-colors shadow-lg shadow-yellow-200">
+              Load More Articles
+            </button>
+          </div>
+        )}
       </Container>
 
       {/* Newsletter Section */}

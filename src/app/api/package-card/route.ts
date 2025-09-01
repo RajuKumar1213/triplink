@@ -47,7 +47,33 @@ export const GET = asyncHandler(async (request: Request) => {
   }
 
   // Fetch only matching packages
-  const packages = await Package.find({ category })
+  // Try exact match first
+  let packagesQuery = Package.find({ category });
+
+  // If no packages found, try alternative formats
+  if ((await packagesQuery.clone().countDocuments()) === 0 && category) {
+    // Try converting slug to name (e.g., "celebrity" -> "Celebrity")
+    const nameVersion = category.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
+    if (nameVersion !== category) {
+      packagesQuery = Package.find({ category: nameVersion });
+    }
+
+    // If still no packages, try converting name to slug (e.g., "Celebrity" -> "celebrity")
+    if ((await packagesQuery.clone().countDocuments()) === 0 && (category.includes(' ') || category !== category.toLowerCase())) {
+      const slugVersion = category
+        .toLowerCase()
+        .trim()
+        .replace(/[^\w\s-]/g, "")
+        .replace(/[\s_-]+/g, "-")
+        .replace(/^-+|-+$/g, "");
+
+      if (slugVersion !== category) {
+        packagesQuery = Package.find({ category: slugVersion });
+      }
+    }
+  }
+
+  const packages = await packagesQuery
     .select("_id name duration heroImage pricing highlights trending slug")
     .lean();
 

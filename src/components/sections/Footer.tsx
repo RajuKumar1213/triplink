@@ -19,7 +19,7 @@ const tourTypes = [
   { label: "World Tours", href: "/international" },
   { label: "Swadesh Tours", href: "/domestic" },
   { label: "Corporate Tours", href: "/corporate" },
-  { label: "50+ Senior Trips", href: "/50-plus-trips" },
+  { label: "50+ Trips", href: "/50-plus-trips" },
 ];
 
 export function Footer() {

@@ -466,8 +466,8 @@ const AdminPackagePage = () => {
                         Select a category
                       </option>
                       {categories.map((cat) => (
-                        <option key={cat.slug} value={cat.name}>
-                          {cat.slug}
+                        <option key={cat.slug} value={cat.slug}>
+                          {cat.name}
                         </option>
                       ))}
                     </select>
@@ -1034,7 +1034,7 @@ const AdminPackagePage = () => {
                     <div className="mt-1 space-y-1">
                       {pkg.category && (
                         <span className="inline-block text-xs text-gray-500 capitalize">
-                          {pkg.category.replace(/-/g, " ")}
+                          {categories.find(cat => cat.slug === pkg.category)?.name || pkg.category.replace(/-/g, " ")}
                         </span>
                       )}
                       {pkg.region && (
@@ -1161,7 +1161,7 @@ const AdminPackagePage = () => {
                           {pkg.name}
                         </div>
                         <div className="text-xs text-gray-500 capitalize">
-                          {pkg.category?.replace(/-/g, " ")}
+                          {categories.find(cat => cat.slug === pkg.category)?.name || pkg.category?.replace(/-/g, " ")}
                         </div>
                       </div>
                     </div>
