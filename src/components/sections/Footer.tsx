@@ -16,8 +16,8 @@ const quickLinks = [
 
 const tourTypes = [
   { label: "Celebrity Tours", href: "/celebrity" },
-  { label: "World Tours", href: "/international" },
-  { label: "Swadesh Tours", href: "/domestic" },
+  { label: "World Tours", href: "/all-destinations?category=international-destinations" },
+  { label: "Swadesh Tours", href: "/all-destinations?category=domestic-destinations" },
   { label: "Corporate Tours", href: "/corporate" },
   { label: "50+ Trips", href: "/50-plus-trips" },
 ];

@@ -205,6 +205,7 @@ export function FAQSection() {
               <div className="flex justify-center mt-6 space-x-2">
                 {animatedImages.map((_, index) => (
                   <button
+                  title='Change Image'
                     key={index}
                     onClick={() => setCurrentImageIndex(index)}
                     className={`w-3 h-3 rounded-full transition-all duration-300 ${
@@ -241,10 +242,10 @@ export function FAQSection() {
               Our travel experts are here to help you plan the perfect adventure
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <button className="bg-white text-yellow-600 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 shadow-lg">
+              <button title='Call Now' className="bg-white text-yellow-600 font-bold py-3 px-8 rounded-xl hover:bg-gray-100 transition-colors duration-300 shadow-lg">
                 📞 Call Now: +91 7838720559
               </button>
-              <button className="bg-yellow-700 text-white font-bold py-3 px-8 rounded-xl hover:bg-yellow-800 transition-colors duration-300 shadow-lg">
+              <button title='Email Us' className="bg-yellow-700 text-white font-bold py-3 px-8 rounded-xl hover:bg-yellow-800 transition-colors duration-300 shadow-lg">
                 ✉️ Email Us
               </button>
             </div>
