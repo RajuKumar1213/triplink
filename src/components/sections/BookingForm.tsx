@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { Container } from "@/components/ui/Container";
+import Image from "next/image";
 
 export function BookingForm() {
   const [formData, setFormData] = useState({
@@ -28,9 +29,12 @@ export function BookingForm() {
         <div className="max-w-5xl mx-auto">
           {/* Heading */}
           <div className="text-center md:mb-8 mb-4">
+           <div className="flex items-center justify-center ">
+             <Image src="/icons/rocket.png" height={20} width={50} className="object-contain md:mr-3 h-8 md:h-16" alt="rocket" />
             <h2 className="text-2xl sm:text-5xl font-extrabold text-gray-900 mb-2 tracking-tight">
-              ✈️ Holiday Packages
+              Holiday Packages
             </h2>
+           </div>
             <p className="text-gray-600 text-sm sm:text-base">
               Book your dream holiday in just a few clicks
             </p>

@@ -43,8 +43,17 @@ function PopUpForm() {
             ✖
           </button>
 
-          <h2 className="text-3xl font-extrabold mb-2">Plan Your Trip ✈️</h2>
-          <p className="text-sm mb-6 opacity-90">
+         <div className="flex items-center justify-center gap-2">
+           <h2 className="text-3xl font-extrabold mb-2">Plan Your Trip </h2>
+          <Image src="/icons/rocket.png"
+            alt="rocket"
+            width={30}
+            height={10}
+            className="object-contain "
+          />
+         </div>
+          <p className="text-sm
+           mb-6 opacity-90">
             Tell us your dream destination & we’ll send you the best deals!
           </p>
 
@@ -102,7 +111,7 @@ function PopUpForm() {
               type="submit"
               title=""
               className="w-full mt-4 bg-black text-yellow-400 rounded-xl py-2 font-bold text-lg hover:bg-yellow-600 hover:text-black transition transform hover:scale-105 shadow-lg">
-              Get Deals 🚀
+              Get Deals 
             </button>
           </form>
         </div>
